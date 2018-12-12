@@ -125,13 +125,14 @@ class a() : BaseAdapter() {
     }
 
     fun getdata(): JSONArray {
-        var list2 = JSONArray()
-        var jo1 = JSONObject()
-        jo1.put("t", "1322165465498641555")//条码
+        val list2 = JSONArray()
+        val jo1 = JSONObject()
+        jo1.put("t", "'6666666")//条码
         jo1.put("m", "M1345646513")
         jo1.put("mn", "M134564M1345646513M1345646513M1345646513M1345646513M1345646513M1345646513M13456465136513")
         jo1.put("n", "300")
 
+        //test
         list2.put(jo1)
         return list2
     }
