@@ -1,19 +1,17 @@
 package com.mes.jyd.adapter
 
-import android.database.DataSetObserver
 import android.graphics.Color
 import android.graphics.Typeface
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.LinearLayout
-import android.widget.ListAdapter
 import org.jetbrains.anko.*
 import org.jetbrains.anko.cardview.v7.cardView
 import org.json.JSONArray
 import org.json.JSONObject
 
-class a() : BaseAdapter() {
+class test : BaseAdapter() {
 
     //生产计划数据
     var list= getdata()
