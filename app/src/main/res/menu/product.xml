@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+            android:id="@+id/menu_paoduct_line"
+            android:title="修改产线工位"
+            android:visible="true"
+            app:showAsAction="never"/>
+
+    <item
+            android:id="@+id/menu_paoduct_paper"
+            android:title="查看图纸"
+            android:visible="true"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/menu_paoduct_error"
+            android:title="申报异常"
+            android:visible="true"
+            app:showAsAction="never"/>
+</menu>

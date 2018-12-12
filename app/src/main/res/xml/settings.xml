@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="服务">
+        <EditTextPreference
+            android:key="server_ip"
+            android:singleLine="true"
+            android:inputType="textUri"
+            android:title="地址" />
+        <EditTextPreference
+            android:key="server_port"
+            android:maxLength="5"
+            android:singleLine="true"
+            android:inputType="numberDecimal"
+            android:title="端口" />
+        <ListPreference
+            android:key="server_ins"
+            android:title="扫描接口选项"
+            android:entries="@array/entry_list"
+            android:entryValues="@array/values_list"
+            android:dialogTitle="list dialogtitle"
+            android:defaultValue="1">
+        </ListPreference>
+    </PreferenceCategory>
+   <!-- <PreferenceCategory android:title="打印">
+        <EditTextPreference
+            android:key="print_paper_width"
+            android:singleLine="true"
+            android:inputType="numberDecimal"
+            android:title="宽度" />
+        <EditTextPreference
+            android:key="print_paper_height"
+            android:maxLength="5"
+            android:singleLine="true"
+            android:inputType="numberDecimal"
+            android:title="高度" />
+    </PreferenceCategory>-->
+    <PreferenceCategory android:title="显示">
+        <SwitchPreference
+            android:key="display_system"
+            android:summaryOff="禁用"
+            android:summaryOn="启用"
+            android:title="系统显示模式" />
+    </PreferenceCategory>
+</PreferenceScreen>

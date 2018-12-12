@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">MES</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_me">Me</string>
+
+    <string name="list_view_empty">Empty</string>
+    <string name="scan">Scan</string>
+    <string name="setting">Setting</string>
+    <string name="symbology">Symbology</string>
+    <string name="test">Test</string>
+
+    <string name="apiurl">http://192.168.0.105:8888/</string>
+    <string name="settings_server_ip">192.168.1.104</string>
+    <string name="settings_server_port">7777</string>
+    <string name="settings_server_ins">1</string>
+    <string name="settings_system_display">false</string>
+    <string name="settings_print_paper_width">74</string>
+    <string name="settings_print_paper_height">31</string>
+</resources>

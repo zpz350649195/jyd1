@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">精益达MES</string>
+    <string name="title_home">首页</string>
+    <string name="title_dashboard">仪表盘</string>
+    <string name="title_notifications">通知</string>
+    <string name="title_me">我</string>
+    <string name="list_view_empty">无数据</string>
+    <string name="scan">扫描</string>
+    <string name="setting">设置</string>
+    <string name="symbology">编码规则</string>
+    <string name="test">测试</string>
+</resources>
