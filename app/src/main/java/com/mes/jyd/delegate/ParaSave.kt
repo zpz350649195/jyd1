@@ -36,6 +36,11 @@ object ParaSave {
         return shared.getBoolean("display_system",context.resources.getString(R.string.settings_system_display).toBoolean())
     }
 
+    fun getDisplayKeyboard(context: Context): Boolean {
+        val shared = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+        return shared.getBoolean("display_keyboard",context.resources.getString(R.string.settings_display_keyboard).toBoolean())
+    }
+
     fun saveUserBarcode(context: Context, userBarcode: String) {
         val shared = context.getSharedPreferences("system", Context.MODE_PRIVATE)
         val editor = shared.edit()

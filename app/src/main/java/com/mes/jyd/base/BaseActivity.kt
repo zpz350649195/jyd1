@@ -1,5 +1,7 @@
 package com.mes.jyd.base
 
+import android.app.Activity
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -9,6 +11,8 @@ import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Gravity
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import org.jetbrains.anko.*
 import android.widget.Toast
 import com.mes.jyd.api.ApiService
@@ -182,4 +186,26 @@ abstract class BaseActivity : AppCompatActivity(), IViewSpecification {
         }
         toast!!.show()
     }
+
+    //软键盘禁用
+    open fun HideKeyboard(view:Activity) {
+        /* Timer().schedule(object:TimerTask(){
+            override fun run() {
+                var manager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                manager.hideSoftInputFromWindow(
+                    vw.currentFocus.windowToken,
+                    InputMethodManager.HIDE_NOT_ALWAYS
+                )
+            }
+        }, 1000)*/
+        if(!ParaSave.getDisplayKeyboard(view)) {
+            var manager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            manager.hideSoftInputFromWindow(
+                view.currentFocus.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS
+            )
+        }
+
+    }
+
 }

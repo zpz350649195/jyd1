@@ -63,6 +63,7 @@ class ProductViewModel(val vw: ProductActivity, val ctx: Context) {
         list.put(jo)
 
 
+
         vw.listAdapter.rebuild()
         vw.refreshLayout.isRefreshing=false
 
@@ -85,13 +86,14 @@ class ProductViewModel(val vw: ProductActivity, val ctx: Context) {
             gettaskplan(vw.positionid,1)
             vw.linearLayoutdetail.setVisibility(View.GONE)
             vw.linearLayouttask.setVisibility(View.VISIBLE)
+            vw.pageid=_pageid
         }else{
             vw.taskpage=1
             getdetail()
             vw.linearLayoutdetail.setVisibility(View.VISIBLE)
             vw.linearLayouttask.setVisibility(View.GONE)
+            vw.pageid=_pageid
         }
-        vw.pageid=_pageid
     }
 
     fun changeline(){
@@ -275,9 +277,10 @@ class ProductViewModel(val vw: ProductActivity, val ctx: Context) {
                             setTitle()
                         }
                         //判断应该切换到哪个视图
-                        if(vw.pageid!=_pageid){
+                        /*if(vw.pageid!=_pageid){
                             changepage(_pageid)
-                        }
+                        }*/
+                        changepage(_pageid)
                         vw.txtmsg.text=t.getString("msg") ?: "error"
 
                         if(vw.ifchangeline){
@@ -354,7 +357,44 @@ class ProductViewModel(val vw: ProductActivity, val ctx: Context) {
     fun getdetail(){
         //获取生产任务
 
-        list2=JSONArray()
+        if(vw.positionid<=0){
+            vw.toast("还未选择工位")
+            return
+        }
+
+        vw.apiService().getdetail(
+            vw.userid,
+            vw.positionid
+        )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { vw.showloading() }
+            .doAfterTerminate { vw.dismissloading()}//请求完成，设置加载为false
+            .subscribe(
+                { t: JSONObject? ->
+                    //context.toast(t?.toString()!!)
+                    if (t?.getBoolean("success")!!) {
+                        if(t.getString("count")=="0")
+                            vw.txtmsg.text="数据处理失败"
+                        else{
+                            val data=t.getJSONArray("data")
+                            list2=data
+                            vw.listAdapterdetail.rebuild()
+                            vw.refreshLayoutDetail.isRefreshing=false
+                        }
+
+                    } else {
+                        // ctx.toast(t.getString("msg") ?: "error")
+                        if(vw.ifchangeline)//如果是在选择工位 则悬浮提示
+                            ctx.toast(t.getString("msg") ?: "error")
+                        else
+                            vw.txtmsg.text=t.getString("msg") ?: "error"
+                    }
+                }, { t: Throwable? ->
+                    vw.txtmsg.text=t?.message ?: "error"
+                }
+            )
+      /*  list2=JSONArray()
         var jo1 = JSONObject()
         jo1.put("t", "1322165465498641555")//条码
         jo1.put("m", "M1345646513")
@@ -364,7 +404,7 @@ class ProductViewModel(val vw: ProductActivity, val ctx: Context) {
         list2.put(jo1)
 
         vw.listAdapterdetail.rebuild()
-        vw.refreshLayoutDetail.isRefreshing=false
+        vw.refreshLayoutDetail.isRefreshing=false*/
     }
 
     fun setTitle(){

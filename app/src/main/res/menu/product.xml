@@ -13,6 +13,12 @@
             android:visible="true"
             app:showAsAction="never"/>
     <item
+            android:id="@+id/menu_paoduct_check"
+            android:title="过程检验"
+            android:visible="true"
+            app:showAsAction="never"/>
+
+    <item
             android:id="@+id/menu_paoduct_error"
             android:title="申报异常"
             android:visible="true"

@@ -36,6 +36,12 @@
     </PreferenceCategory>-->
     <PreferenceCategory android:title="显示">
         <SwitchPreference
+                android:key="display_keyboard"
+                android:summaryOff="禁用"
+                android:summaryOn="启用"
+                android:title="系统软键盘" />
+
+        <SwitchPreference
             android:key="display_system"
             android:summaryOff="禁用"
             android:summaryOn="启用"

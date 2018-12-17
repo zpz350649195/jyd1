@@ -16,6 +16,7 @@
     <string name="settings_server_port">7777</string>
     <string name="settings_server_ins">1</string>
     <string name="settings_system_display">false</string>
+    <string name="settings_display_keyboard">true</string>
     <string name="settings_print_paper_width">74</string>
     <string name="settings_print_paper_height">31</string>
 </resources>

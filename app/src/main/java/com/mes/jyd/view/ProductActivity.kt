@@ -2,38 +2,26 @@ package com.mes.jyd.view
 
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 import android.graphics.Color
-import android.opengl.Visibility
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.Toolbar
-import android.view.Display
-import android.view.Gravity
 import android.view.View
 import android.view.ViewManager
 import android.widget.AbsListView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.mes.jyd.R
-import com.mes.jyd.adapter.ProductAdapter
+import com.mes.jyd.adapter.ProductDetailAdapter
 import com.mes.jyd.adapter.ProductTaskAdapter
-import com.mes.jyd.base.BaseScanActivity
 import com.mes.jyd.delegate.ListView
 import com.mes.jyd.viewModel.ProductViewModel
-import kotlinx.android.synthetic.main.activity_main.view.*
 import org.jetbrains.anko.*
 import org.jetbrains.anko.appcompat.v7.coroutines.onMenuItemClick
 import org.jetbrains.anko.appcompat.v7.toolbar
 import org.jetbrains.anko.custom.ankoView
-import org.jetbrains.anko.design.bottomNavigationView
 import org.jetbrains.anko.design.coordinatorLayout
-import org.jetbrains.anko.sdk25.coroutines.onClick
-import org.jetbrains.anko.sdk25.coroutines.onItemClick
-import org.jetbrains.anko.sdk25.coroutines.onScrollListener
 import org.jetbrains.anko.support.v4.swipeRefreshLayout
-import org.w3c.dom.Text
-import android.support.v4.content.ContextCompat.startActivity
 import android.widget.EditText
 import com.mes.jyd.base.scanActivity
 import com.mes.jyd.delegate.ParaSave
@@ -55,7 +43,7 @@ class ProductActivity : scanActivity() {
 
 
     lateinit var refreshLayoutDetail: SwipeRefreshLayout
-    lateinit var listAdapterdetail: ProductAdapter
+    lateinit var listAdapterdetail: ProductDetailAdapter
     lateinit var listViewdetail: ListView
 
     lateinit var txtmsg:TextView
@@ -98,7 +86,7 @@ class ProductActivity : scanActivity() {
     override fun initParams(args: Bundle?) {
         vm=ProductViewModel(this,this.ctx)
         listAdapter=ProductTaskAdapter(vm)
-        listAdapterdetail=ProductAdapter(vm)
+        listAdapterdetail=ProductDetailAdapter(vm)
         ScanUtil(this.ctx)
         userid=ParaSave.getUserId(this).toInt()
     }
@@ -130,6 +118,12 @@ class ProductActivity : scanActivity() {
                             intent.putExtra("filename","tt.pdf")
                             intent.putExtra("page",page)
                             startActivityForResult(intent,222)
+                        }
+                        R.id.menu_paoduct_check->{
+                            val intent:Intent=Intent(ctx, ProductCheckActivity::class.java)
+                            intent.putExtra("userid",userid)
+                            intent.putExtra("pnid",positionid)
+                            startActivity( intent, null)
                         }
                         R.id.menu_paoduct_error->{}
                     }
@@ -170,7 +164,7 @@ class ProductActivity : scanActivity() {
                     }.lparams {
                         width = matchParent
                         height = matchParent
-                        topMargin = dip(50)
+                        topMargin = dip(55)
                         minimumHeight=dip(200)
                         //    bottom=dip(100)
 
@@ -210,7 +204,7 @@ class ProductActivity : scanActivity() {
                     }.lparams {
                         width = matchParent
                         height = matchParent
-                        topMargin = dip(50)
+                        topMargin = dip(55)
                         minimumHeight=dip(200)
                         //    bottom=dip(100)
 

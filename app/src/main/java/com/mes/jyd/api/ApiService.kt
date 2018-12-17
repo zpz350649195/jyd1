@@ -44,6 +44,33 @@ interface ApiService {
         @Query("pnum") pnum: Int
     ): Single<JSONObject>
 
+    //获取生产详细生产任务
+    @GET("product.asmx/getdetail")
+    fun getdetail(
+        @Query("ui") ui: Int,
+        @Query("pnid") pnid: Int
+    ): Single<JSONObject>
+
+    //获取检测项
+    @GET("product.asmx/getcheckitem")
+    fun getcheckitem(
+        @Query("ui") ui: Int,
+        @Query("pnid") pnid: Int,
+        @Query("checktype") checktype: Int
+    ): Single<JSONObject>
+
+    //设置检测结果值
+    @GET("product.asmx/setcheckresult")
+    fun setcheckresult(
+        @Query("ui") ui: Int,
+        @Query("pnid") pnid: Int,
+        @Query("id") id: Int,
+        @Query("value") value: Float,
+        @Query("checkbox") checkbox: Int,
+        @Query("desc") desc: String
+
+    ): Single<JSONObject>
+
     //获取FTP服务器信息 type: tech 工艺文件 paper 图纸
     @GET("product.asmx/getftpmsg")
     fun getftpmsg(

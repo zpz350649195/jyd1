@@ -21,7 +21,9 @@ import android.widget.TextView
 import android.widget.Toast
 import com.mes.jyd.R
 import com.mes.jyd.adapter.DashboardCardItemAdapter
+import com.mes.jyd.base.BaseActivity
 import com.mes.jyd.base.BaseScanActivity
+import com.mes.jyd.base.scanActivity
 import com.mes.jyd.delegate.AndroidUtil
 import com.mes.jyd.delegate.ParaSave
 import com.mes.jyd.service.DownloadService
@@ -38,7 +40,7 @@ import org.jetbrains.anko.support.v4.swipeRefreshLayout
 import java.io.File
 
 
-class NavigationActivity : BaseScanActivity() {
+class NavigationActivity : BaseActivity() {
     private lateinit var vm: NavigationViewModel
     lateinit var mAdapter: DashboardCardItemAdapter
 
@@ -54,7 +56,8 @@ class NavigationActivity : BaseScanActivity() {
     override fun initParams(args: Bundle?) {
         vm = NavigationViewModel(this, this)
         mAdapter=DashboardCardItemAdapter(vm)
-//        vm.getUserBarcode()
+    //    ScanUtil(this.ctx)
+      //  vm.getUserBarcode()
     }
 
     override fun initView() {
@@ -122,6 +125,7 @@ class NavigationActivity : BaseScanActivity() {
 
                     }
                 }
+                //下拉刷新事件
                 setOnRefreshListener {
                     vm.getPermission()
                 }
@@ -141,7 +145,7 @@ class NavigationActivity : BaseScanActivity() {
     }
 
     override fun doBusiness() {
-       vm.getUserBarcode()
+      vm.getUserBarcode()
         //    vm.getuser()
 
         //待配送工单通知服务
@@ -150,12 +154,20 @@ class NavigationActivity : BaseScanActivity() {
         startService(startIntent)*/
     }
 
+
+
     override fun onResume() {
         super.onResume()
         toolbar.subtitle=name
+     //   open()
       //  getNewVersion()
 
 
+    }
+
+    override fun onPause() {
+        super.onPause()
+      //  close()
     }
 
     private fun getNewVersion(){
@@ -184,7 +196,7 @@ class NavigationActivity : BaseScanActivity() {
         return super.onKeyDown(keyCode, event)
     }
 
-    override fun showResult(barcode: String) {
+     fun showResult(barcode: String) {
         toast(barcode)
     }
 

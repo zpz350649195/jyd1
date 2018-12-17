@@ -56,9 +56,7 @@
             </intent-filter>-->
         <activity android:name=".view.NavigationActivity" android:theme="@style/MyTheme">
             <intent-filter>
-                <!--<action android:name="android.intent.action.MAIN"/>-->
                 <action android:name="android.intent.action.MAIN"/>
-                <!--<action android:name="com.mes.jyd.view.NavigationActivity"/>-->
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -74,6 +72,8 @@
         <activity android:name=".view.PaperActivity" android:theme="@style/MyTheme"/>
 
         <activity android:name=".view.WorkThreadActivity" android:theme="@style/MyTheme"/>
+
+        <activity android:name=".view.ProductCheckActivity" android:theme="@style/MyTheme"/>
 
 
     </application>

@@ -57,7 +57,7 @@ class ProductTaskAdapter(viewModel:ProductViewModel):BaseAdapter() {
                         //物料编号
                         //显示第一个为零件号
                         textView {
-                            val t = "物料编码: ${item.getString("mapno")}"
+                            val t = "产品编码: ${item.getString("mapno")}"
                             text = t
                             textSize = 17f
                             textColor = Color.argb(85, 0, 0, 0)
@@ -66,7 +66,7 @@ class ProductTaskAdapter(viewModel:ProductViewModel):BaseAdapter() {
                         }
                         //物料名称
                         textView {
-                            val t = "物料名称: ${item.getString("memo")}"
+                            val t = "产品名称: ${item.getString("memo")}"
                             text = t
                             textSize = 17f
 

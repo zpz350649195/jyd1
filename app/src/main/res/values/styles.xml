@@ -18,4 +18,8 @@
 
     </style>
 
+    <style name="MyCheckBox" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@xml/checkbox_style</item>
+    </style>
+
 </resources>

@@ -62,6 +62,10 @@ class SetttingsActivity : BaseActivity() {
             if (sharedPreferences.getString("display_system", "").isEmpty()) {
                 editer.putBoolean("display_system", resources.getString(R.string.settings_system_display).toBoolean())
             }
+
+            if (sharedPreferences.getString("display_keyboard", "").isEmpty()) {
+                editer.putBoolean("display_keyboard", resources.getString(R.string.settings_display_keyboard).toBoolean())
+            }
         }catch (ex:Exception){ }
 
         /*if (sharedPreferences.getString("print_paper_width", "").isEmpty()) {
