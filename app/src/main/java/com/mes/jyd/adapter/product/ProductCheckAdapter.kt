@@ -1,15 +1,13 @@
-package com.mes.jyd.adapter
+package com.mes.jyd.adapter.product
 
 import android.graphics.Color
 import android.graphics.Typeface
-import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.LinearLayout
-import android.widget.TextView
 import com.mes.jyd.util.general
-import com.mes.jyd.viewModel.ProductCheckViewModel
+import com.mes.jyd.viewModel.product.ProductCheckViewModel
 import org.jetbrains.anko.*
 import org.jetbrains.anko.cardview.v7.cardView
 import org.json.JSONObject

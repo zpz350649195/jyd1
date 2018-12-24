@@ -16,8 +16,10 @@ import com.mes.jyd.delegate.ParaSave
 import com.mes.jyd.util.logsaves
 import com.mes.jyd.view.LoginActivity
 import com.mes.jyd.view.NavigationActivity
-import com.mes.jyd.view.ProductActivity
+import com.mes.jyd.view.product.ProductActivity
 import com.mes.jyd.view.WorkThreadActivity
+import com.mes.jyd.view.io.InStockActivity
+import com.mes.jyd.view.product.ProductInspectActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.clearTask
@@ -43,9 +45,13 @@ class NavigationViewModel(val viewActivity: NavigationActivity, val ctx: Context
                     "item_imageid" to R.drawable.ic_work_24dp
             ),
             "03" to mapOf("item_id" to "03",
-                    "item_name" to "来料收货",
+                    "item_name" to "巡检",
                     "item_imageid" to R.drawable.ic_work_24dp
-            )
+            ),
+            "04" to mapOf("item_id" to "04",
+                "item_name" to "完工入库",
+                "item_imageid" to R.drawable.ic_work_24dp
+                )
     )
     var list = mutableListOf<Map<String, Any>>()
 
@@ -54,7 +60,8 @@ class NavigationViewModel(val viewActivity: NavigationActivity, val ctx: Context
     fun go(ctx: Context, id: String) {
         val intent: Intent = when (id) {
             "02" -> Intent(ctx, ProductActivity::class.java).putExtra("type", 0).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            "03" -> Intent(ctx, WorkThreadActivity::class.java).putExtra("type", 0).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            "03" -> Intent(ctx, ProductInspectActivity::class.java).putExtra("type", 0).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            "04" -> Intent(ctx, InStockActivity::class.java).putExtra("type", 0).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             else -> return
         }
         startActivity(ctx, intent, null)
@@ -149,6 +156,14 @@ class NavigationViewModel(val viewActivity: NavigationActivity, val ctx: Context
 
          navObj = mapNav.getValue("03")
          nav = mapOf(
+            "item_id" to navObj.getValue("item_id"),
+            "item_name" to navObj.getValue("item_name"),
+            "item_imageid" to navObj.getValue("item_imageid")
+        )
+        list.add(nav)
+
+        navObj = mapNav.getValue("04")
+        nav = mapOf(
             "item_id" to navObj.getValue("item_id"),
             "item_name" to navObj.getValue("item_name"),
             "item_imageid" to navObj.getValue("item_imageid")

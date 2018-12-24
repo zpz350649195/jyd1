@@ -1,8 +1,6 @@
-package com.mes.jyd.view
+package com.mes.jyd.view.product
 
 import android.content.DialogInterface
-import android.content.Intent
-import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
@@ -11,28 +9,24 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.Toolbar
 import android.text.InputType
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.mes.jyd.R
-import com.mes.jyd.adapter.ProductCheckAdapter
+import com.mes.jyd.adapter.product.ProductCheckAdapter
 import com.mes.jyd.base.BaseActivity
-import com.mes.jyd.viewModel.ProductCheckViewModel
+import com.mes.jyd.viewModel.product.ProductCheckViewModel
 import org.jetbrains.anko.*
 import org.jetbrains.anko.appcompat.v7.toolbar
-import org.jetbrains.anko.custom.style
 import org.jetbrains.anko.design.coordinatorLayout
 import org.jetbrains.anko.design.textInputEditText
 import org.jetbrains.anko.design.textInputLayout
-import org.jetbrains.anko.sdk25.coroutines.onCheckedChange
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.sdk25.coroutines.onFocusChange
 import org.jetbrains.anko.sdk25.coroutines.onScrollListener
 import org.jetbrains.anko.support.v4.swipeRefreshLayout
-import java.util.*
 
 class ProductCheckActivity:BaseActivity(){
     private lateinit var vm: ProductCheckViewModel
-    private  lateinit var vw:ProductCheckActivity
+    private  lateinit var vw: ProductCheckActivity
     lateinit var listAdapter: ProductCheckAdapter
 
     lateinit var refreshLayout: SwipeRefreshLayout

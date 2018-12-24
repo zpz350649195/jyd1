@@ -67,13 +67,21 @@
 
         <activity android:name=".view.SetttingsActivity" android:theme="@style/MyTheme"/>
 
-        <activity android:name=".view.ProductActivity" android:theme="@style/MyTheme"/>
+        <activity android:name=".view.product.ProductActivity" android:theme="@style/MyTheme"/>
 
-        <activity android:name=".view.PaperActivity" android:theme="@style/MyTheme"/>
+        <activity android:name=".view.product.ProductPaperActivity" android:theme="@style/MyTheme"/>
 
         <activity android:name=".view.WorkThreadActivity" android:theme="@style/MyTheme"/>
 
-        <activity android:name=".view.ProductCheckActivity" android:theme="@style/MyTheme"/>
+        <activity android:name=".view.product.ProductCheckActivity" android:theme="@style/MyTheme"/>
+
+        <activity android:name=".view.product.ProductInspectActivity" android:theme="@style/MyTheme"/>
+
+        <activity android:name=".view.product.ProductInspectCheckActivity" android:theme="@style/MyTheme"/>
+
+        <activity android:name=".view.io.InStockActivity" android:theme="@style/MyTheme" />
+        <activity android:name=".view.io.InStockDetailActivity" android:theme="@style/MyTheme" />
+
 
 
     </application>

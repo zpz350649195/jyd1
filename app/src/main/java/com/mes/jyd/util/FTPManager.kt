@@ -83,7 +83,7 @@ class FTPManager(var handler:Handler) {
         // 如果本地文件存在，服务器文件也在，上传文件，这个方法中也包括了断点上传
         val localSize = localFile.length() // 本地文件的长度
         val files = ftpClient!!.listFiles(fileName)
-        var serverSize: Long = 0
+        var serverSize: Long
         if (files.size == 0) {
             System.out.println("服务器文件不存在")
             serverSize = 0

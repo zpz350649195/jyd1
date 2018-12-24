@@ -2,6 +2,7 @@ package com.mes.jyd.view
 
 import android.app.FragmentManager
 import android.app.FragmentTransaction
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -24,11 +25,14 @@ class WorkThreadActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.looper_activity2)
         button1.setOnClickListener {
-            manage=fragmentManager
+            /*manage=fragmentManager
             transaction=manage.beginTransaction()
             val articleListFragment= ArticleListFragment()
             transaction.add(R.id.center,articleListFragment,"article")
-            transaction.commit()
+            transaction.commit()*/
+            val _if = Intent("zpz.test")
+            _if.putExtra("name", "now")
+            sendBroadcast(_if)
 
         }
 

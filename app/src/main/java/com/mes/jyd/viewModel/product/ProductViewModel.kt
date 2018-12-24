@@ -1,32 +1,13 @@
-package com.mes.jyd.viewModel
+package com.mes.jyd.viewModel.product
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
-import android.content.Context.NOTIFICATION_SERVICE
-import android.content.Intent
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Typeface
-import android.graphics.drawable.Drawable
-import android.os.Build
-import android.os.Environment
-import android.support.v4.content.ContextCompat.startActivity
-import android.support.v4.app.NotificationCompat
-import android.util.Log
 import android.view.Gravity
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import com.mes.jyd.R
 import com.mes.jyd.delegate.*
-import com.mes.jyd.service.DownloadService
-import com.mes.jyd.view.LoginActivity
-import com.mes.jyd.view.NavigationActivity
-import com.mes.jyd.view.ProductActivity
+import com.mes.jyd.view.product.ProductActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.*
@@ -35,9 +16,6 @@ import org.jetbrains.anko.design.textInputLayout
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.File
-import java.io.IOException
-import java.lang.Exception
 
 
 /**
@@ -334,13 +312,19 @@ class ProductViewModel(val vw: ProductActivity, val ctx: Context) {
                         if(_page==1){
                             vw.taskpage=1
                             list=data
+                            vw.listAdapter.rebuild()
+                            vw.refreshLayout.isRefreshing = false
                         }else{
-                            vw.taskpage++
-                         //   list.put(data)
-                            list = ArithUtil.joinJSONArray(list, data)!!
+                            if(t.getInt("count")>0) {
+                                vw.taskpage++
+                                //   list.put(data)
+                                list = ArithUtil.joinJSONArray(list, data)!!
+                                vw.listAdapter.rebuild()
+                                vw.refreshLayout.isRefreshing = false
+                            }
                         }
-                        vw.listAdapter.rebuild()
-                        vw.refreshLayout.isRefreshing=false
+
+
                     } else {
                         // ctx.toast(t.getString("msg") ?: "error")
                         if(vw.ifchangeline)//如果是在选择工位 则悬浮提示

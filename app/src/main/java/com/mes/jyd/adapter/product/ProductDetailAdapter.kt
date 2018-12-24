@@ -1,21 +1,25 @@
-package com.mes.jyd.adapter
+package com.mes.jyd.adapter.product
 
 import android.graphics.Color
 import android.graphics.Typeface
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.LinearLayout
-import com.mes.jyd.viewModel.ProductViewModel
+import android.widget.TextView
+import com.mes.jyd.viewModel.product.ProductViewModel
 import org.jetbrains.anko.*
 import org.jetbrains.anko.cardview.v7.cardView
-import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.json.JSONObject
 
-class ProductTaskAdapter(viewModel:ProductViewModel):BaseAdapter() {
+class ProductDetailAdapter(viewModel: ProductViewModel):BaseAdapter() {
     //生产计划数据
     var vm=viewModel
-    var list=vm.list
+    var list=vm.list2
+
+    var titlesize=23f
+    var contentsize=23f
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val item = getItem(position)
@@ -28,9 +32,44 @@ class ProductTaskAdapter(viewModel:ProductViewModel):BaseAdapter() {
 
                     linearLayout {
                         orientation = LinearLayout.VERTICAL
+                        var _Text:TextView
+                        relativeLayout {
+                            _Text= textView {
+                                val t = "生产工单:"
+                                id=1
+                                text = t
+                                textSize = 23f
+                                typeface= Typeface.create("Roboto-medium",Typeface.NORMAL)
+                                /*if(item.getString("ie")=="0"){//是否异常
+                                    textColor = Color.argb(85, 0, 0, 0)
+                                }else{
+                                    textColor = Color.argb(85, 200, 0, 0)
+                                }*/
+                            }.lparams{
+                                verticalGravity=Gravity.CENTER_VERTICAL
+                            }
+
+                            textView {
+                                val t = " ${item.getString("taskid")}"
+                                text = t
+                                textSize = 23f
+                                /*if(item.getString("ie")=="0"){//是否异常
+                                    textColor = Color.argb(85, 0, 0, 0)
+                                }else{
+                                    textColor = Color.argb(85, 200, 0, 0)
+                                }*/
+
+                            }.lparams {
+                                rightOf(1)
+                            }
+                        }.lparams{
+                            verticalMargin= dip(4)
+                        }
+                        //生产工单号
+
                         //生产工单号
                         textView {
-                            val t = " ${item.getString("taskid")}(${item.getString("proccode")})"
+                            val t = " 工序：${item.getString("technicsdemand")}"
                             text = t
                             textSize = 17f
                             /*if(item.getString("ie")=="0"){//是否异常
@@ -39,21 +78,9 @@ class ProductTaskAdapter(viewModel:ProductViewModel):BaseAdapter() {
                                 textColor = Color.argb(85, 200, 0, 0)
                             }*/
                         }.lparams {
-                            verticalMargin = dip(2)
+                            verticalMargin = dip(4)
                         }
-                        //工序信息
-                        textView {
-                            val t = "工序:${item.getString("procseq")}(${item.getString("technicsdemand")})"
-                            text = t
-                            textSize = 17f
-                            /*if(item.getString("ie")=="0"){//是否异常
-                                textColor = Color.argb(85, 0, 0, 0)
-                            }else{
-                                textColor = Color.argb(85, 200, 0, 0)
-                            }*/
-                        }.lparams {
-                            verticalMargin = dip(2)
-                        }
+
                         //物料编号
                         //显示第一个为零件号
                         textView {
@@ -62,7 +89,7 @@ class ProductTaskAdapter(viewModel:ProductViewModel):BaseAdapter() {
                             textSize = 17f
                             textColor = Color.argb(85, 0, 0, 0)
                         }.lparams {
-                            verticalMargin = dip(8)
+                            verticalMargin = dip(4)
                         }
                         //物料名称
                         textView {
@@ -71,7 +98,7 @@ class ProductTaskAdapter(viewModel:ProductViewModel):BaseAdapter() {
                             textSize = 17f
 
                         }.lparams {
-                            verticalMargin = dip(2)
+                            verticalMargin = dip(1)
                         }
                         //数量
                         relativeLayout{
@@ -80,15 +107,13 @@ class ProductTaskAdapter(viewModel:ProductViewModel):BaseAdapter() {
                                 relativeLayout {
                                     //数量
                                     textView {
-                                        text=item.getString("plansubnum")+"-"+item.getString("plansubmakenum")
+                                        text=item.getString("plannum")
                                         textSize = 15f
                                         typeface= Typeface.create("Roboto-medium",Typeface.NORMAL)
                                     }
-
-
-                                    //开始时间
+                                    //已完成数
                                     textView {
-                                        text=item.getString("begindate")
+                                        text=item.getString("makenum")
                                         textSize = 15f
                                         typeface= Typeface.create("Roboto-medium",Typeface.NORMAL)
                                     }.lparams {
@@ -99,13 +124,13 @@ class ProductTaskAdapter(viewModel:ProductViewModel):BaseAdapter() {
                                 relativeLayout {
                                     //数量
                                     textView {
-                                        text="数量-已完成数量"
+                                        text="数量"
                                         textSize = 13f
                                         typeface= Typeface.create("Roboto-medium",Typeface.NORMAL)
                                     }
-                                    //开始时间
+                                    //已完成数
                                     textView {
-                                        text="开始时间"
+                                        text="已完成数量"
                                         textSize = 13f
                                     }.lparams {
                                         alignParentRight()
@@ -141,7 +166,7 @@ class ProductTaskAdapter(viewModel:ProductViewModel):BaseAdapter() {
     }
 
     fun rebuild() {
-        list = vm.list
+        list = vm.list2
         notifyDataSetChanged()
     }
 }

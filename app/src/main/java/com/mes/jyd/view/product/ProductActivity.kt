@@ -1,4 +1,4 @@
-package com.mes.jyd.view
+package com.mes.jyd.view.product
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -12,10 +12,10 @@ import android.widget.AbsListView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.mes.jyd.R
-import com.mes.jyd.adapter.ProductDetailAdapter
-import com.mes.jyd.adapter.ProductTaskAdapter
+import com.mes.jyd.adapter.product.ProductDetailAdapter
+import com.mes.jyd.adapter.product.ProductTaskAdapter
 import com.mes.jyd.delegate.ListView
-import com.mes.jyd.viewModel.ProductViewModel
+import com.mes.jyd.viewModel.product.ProductViewModel
 import org.jetbrains.anko.*
 import org.jetbrains.anko.appcompat.v7.coroutines.onMenuItemClick
 import org.jetbrains.anko.appcompat.v7.toolbar
@@ -46,6 +46,8 @@ class ProductActivity : scanActivity() {
     lateinit var listAdapterdetail: ProductDetailAdapter
     lateinit var listViewdetail: ListView
 
+    lateinit var empty:TextView
+
     lateinit var txtmsg:TextView
     lateinit var main:LinearLayout
 
@@ -73,6 +75,7 @@ class ProductActivity : scanActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
        // requestedOrientation=SCREEN_ORIENTATION_LANDSCAPE
+        userid=ParaSave.getUserId(this).toInt()
         super.onCreate(savedInstanceState)
     }
 
@@ -84,11 +87,10 @@ class ProductActivity : scanActivity() {
     }
 
     override fun initParams(args: Bundle?) {
-        vm=ProductViewModel(this,this.ctx)
-        listAdapter=ProductTaskAdapter(vm)
-        listAdapterdetail=ProductDetailAdapter(vm)
+        vm= ProductViewModel(this, this.ctx)
+        listAdapter= ProductTaskAdapter(vm)
+        listAdapterdetail= ProductDetailAdapter(vm)
         ScanUtil(this.ctx)
-        userid=ParaSave.getUserId(this).toInt()
     }
 
     override fun initView() {
@@ -111,10 +113,10 @@ class ProductActivity : scanActivity() {
                             vm.changeline()
                         }
                         R.id.menu_paoduct_paper->{
-                          //  val intent: Intent = Intent(ctx, PaperActivity::class.java).putExtra("type", 0).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                          /*  val intent: Intent = Intent(ctx, PaperActivity::class.java)
+                          //  val intent: Intent = Intent(ctx, ProductPaperActivity::class.java).putExtra("type", 0).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                          /*  val intent: Intent = Intent(ctx, ProductPaperActivity::class.java)
                             startActivity(ctx, intent, null)*/
-                            val intent:Intent=Intent(ctx, PaperActivity::class.java)
+                            val intent:Intent=Intent(ctx, ProductPaperActivity::class.java)
                             intent.putExtra("filename","tt.pdf")
                             intent.putExtra("page",page)
                             startActivityForResult(intent,222)
@@ -215,6 +217,16 @@ class ProductActivity : scanActivity() {
                     height=dip(250)
                     weight=1.0f
                 }
+
+                //空视图
+                empty=textView {
+                    text="没有数据"
+
+                }.lparams{
+                    width = matchParent
+                    height=dip(250)
+                    weight=1.0f
+                }
                 //主框架结束
                 //底部提示信息开始
                 linearLayout {
@@ -259,6 +271,10 @@ class ProductActivity : scanActivity() {
          //   listView.emptyView = emptyView
 
         }
+
+        listView.emptyView=empty
+        listViewdetail.emptyView=empty
+
         var onMoreTime = 0L
         listView.addOnScrollListener(object : AbsListView.OnScrollListener {
             override fun onScrollStateChanged(view: AbsListView, scrollState: Int) {

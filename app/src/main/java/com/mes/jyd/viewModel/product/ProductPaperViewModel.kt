@@ -1,4 +1,4 @@
-package com.mes.jyd.viewModel
+package com.mes.jyd.viewModel.product
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -6,11 +6,10 @@ import android.os.Environment
 import android.os.Handler
 import android.os.Message
 import android.widget.Toast
-import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
 import com.mes.jyd.delegate.NetworkUtil
 import com.mes.jyd.util.logsaves
 import com.mes.jyd.util.FTPManager
-import com.mes.jyd.view.PaperActivity
+import com.mes.jyd.view.product.ProductPaperActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.pdf.*
@@ -19,7 +18,7 @@ import org.json.JSONObject
 import java.io.File
 import java.lang.Exception
 
-class PaperViewModel(val vw: PaperActivity, val ctx: Context) {
+class ProductPaperViewModel(val vw: ProductPaperActivity, val ctx: Context) {
     var _f= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
     var toast: Toast? = null
 
@@ -60,7 +59,7 @@ class PaperViewModel(val vw: PaperActivity, val ctx: Context) {
     fun showTextToast(msg: String) {
         try {
             if (toast == null) {
-                toast = Toast.makeText(vw, msg, Toast.LENGTH_SHORT)
+                    toast = Toast.makeText(vw, msg, Toast.LENGTH_SHORT)
             } else {
                 toast!!.setText(msg)
             }
@@ -74,7 +73,7 @@ class PaperViewModel(val vw: PaperActivity, val ctx: Context) {
     /**
      * 把处理结果放回ui线程
      */
-    val  handler =@SuppressLint("HandlerLeak")
+   private val  handler =@SuppressLint("HandlerLeak")
     object : Handler() {
         override fun handleMessage(msg: Message) {
             when (msg.what) {

@@ -1,32 +1,25 @@
-package com.mes.jyd.view
+package com.mes.jyd.view.product
 
 import android.Manifest
 import android.app.Activity
-import android.content.ClipData
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.support.v7.widget.Toolbar
-import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
-import android.widget.LinearLayout
 import com.github.barteksc.pdfviewer.PDFView
-import com.google.gson.JsonObject
 import com.mes.jyd.R
 import com.mes.jyd.base.BaseActivity
-import com.mes.jyd.viewModel.PaperViewModel
+import com.mes.jyd.viewModel.product.ProductPaperViewModel
 import kotlinx.android.synthetic.main.pdf.*
 import org.jetbrains.anko.appcompat.v7.coroutines.onMenuItemClick
 import org.jetbrains.anko.ctx
 import org.json.JSONObject
 
-class PaperActivity:BaseActivity(){
+class ProductPaperActivity:BaseActivity(){
     lateinit var filename:String
-    lateinit var vm:PaperViewModel
+    lateinit var vm: ProductPaperViewModel
 
     lateinit var  _json: JSONObject //FTP服务器信息
     var iftrue:Boolean=true //获取FTP服务信息是否成功
@@ -75,7 +68,7 @@ class PaperActivity:BaseActivity(){
     }
 
     override fun initParams(args: Bundle?) {
-       vm= PaperViewModel(this,this.ctx)
+       vm= ProductPaperViewModel(this, this.ctx)
         /*coordinatorLayout {
             //工具栏开始
             _toolbar = toolbar {

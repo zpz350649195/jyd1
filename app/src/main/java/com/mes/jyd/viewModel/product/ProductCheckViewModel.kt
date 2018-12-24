@@ -1,45 +1,13 @@
-package com.mes.jyd.viewModel
+package com.mes.jyd.viewModel.product
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
-import android.content.Context.NOTIFICATION_SERVICE
-import android.content.Intent
-import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.graphics.Typeface
-import android.graphics.drawable.Drawable
-import android.os.Build
-import android.os.Environment
-import android.support.v4.content.ContextCompat.startActivity
-import android.support.v4.app.NotificationCompat
-import android.util.Log
-import android.view.Gravity
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import com.mes.jyd.R
-import com.mes.jyd.delegate.*
-import com.mes.jyd.service.DownloadService
 import com.mes.jyd.util.general
-import com.mes.jyd.view.LoginActivity
-import com.mes.jyd.view.NavigationActivity
-import com.mes.jyd.view.ProductActivity
-import com.mes.jyd.view.ProductCheckActivity
+import com.mes.jyd.view.product.ProductCheckActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import org.jetbrains.anko.*
-import org.jetbrains.anko.design.textInputEditText
-import org.jetbrains.anko.design.textInputLayout
-import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.File
-import java.io.IOException
-import java.lang.Exception
 
 
 /**
