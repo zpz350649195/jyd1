@@ -32,7 +32,8 @@ interface ApiService {
     fun productscan(
         @Query("ui") ui: Int,
         @Query("pnid") pnid: Int,
-        @Query("bc") bc: String
+        @Query("bc") bc: String,
+        @Query("num") num: Int
     ): Single<JSONObject>
 
     //获取生产计划
@@ -75,6 +76,7 @@ interface ApiService {
     @GET("check.asmx/getnocheckitem")
     fun getinspectitem(
         @Query("ui") ui: Int,
+        @Query("checktype") checktype: Int,
         @Query("page") page: Int
     ): Single<JSONObject>
 
@@ -125,6 +127,55 @@ interface ApiService {
         @Query("ui") ui: Int,
         @Query("lgort") lgort: String,
         @Query("arrstr") arrstr: String
+    ): Single<JSONObject>
+
+    //入库申请单
+    @GET("check.asmx/checkisgetmsg")
+    fun checkisgetmsg(
+        @Query("ui") ui: Int,
+        @Query("page") page: Int
+    ): Single<JSONObject>
+
+
+    //根据id或条码获取入库检验详细信息
+    @GET("check.asmx/checkisgetitem")
+    fun checkisgetitem(
+        @Query("ui") ui: Int,
+        @Query("type") type: Int,
+        @Query("id") id: Int,
+        @Query("bc") bc: String,
+        @Query("isfinish") isfinish: Int,
+        @Query("page") page: Int
+    ): Single<JSONObject>
+
+    //入库检验扫码获取检验项
+    @GET("check.asmx/checkisgetdetail")
+    fun checkisgetdetail(
+        @Query("ui") ui: Int,
+        @Query("isnew") isnew: Int,
+        @Query("mainid") mainid: Int,
+        @Query("id") id: Int,
+        @Query("bc") bc: String
+    ): Single<JSONObject>
+
+    //质量排查批量提交
+    @GET("check.asmx/checkprevious")
+    fun checkprevious(
+        @Query("ui") ui: Int,
+        @Query("pnid") pnid: Int,
+        @Query("desc") desc: String,
+        @Query("arrstr") arrstr: String
+
+    ): Single<JSONObject>
+
+    //不合格品处理结果提交
+    @GET("check.asmx/rejectmanage")
+    fun rejectmanage(
+        @Query("ui") ui: Int,
+        @Query("id") id: Int,
+        @Query("state") state: Int,
+        @Query("desc") desc: String
+
     ): Single<JSONObject>
 
     //获取FTP服务器信息 type: tech 工艺文件 paper 图纸

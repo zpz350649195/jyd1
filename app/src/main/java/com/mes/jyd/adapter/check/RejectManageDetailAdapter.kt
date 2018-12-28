@@ -1,4 +1,4 @@
-package com.mes.jyd.adapter.product
+package com.mes.jyd.adapter.check
 
 import android.graphics.Color
 import android.graphics.Typeface
@@ -7,12 +7,13 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.LinearLayout
 import com.mes.jyd.util.general
-import com.mes.jyd.viewModel.product.ProductCheckViewModel
+import com.mes.jyd.viewModel.check.ProductInspectCheckViewModel
+import com.mes.jyd.viewModel.check.RejectManageDetailViewModel
 import org.jetbrains.anko.*
 import org.jetbrains.anko.cardview.v7.cardView
 import org.json.JSONObject
 
-class ProductCheckAdapter(viewModel: ProductCheckViewModel): BaseAdapter() {
+class RejectManageDetailAdapter(viewModel: RejectManageDetailViewModel): BaseAdapter() {
     //生产计划数据
     var vm=viewModel
     var list=vm.list
@@ -150,44 +151,9 @@ class ProductCheckAdapter(viewModel: ProductCheckViewModel): BaseAdapter() {
                             }
                         }
 
-
-
-
-
-                        if(vm.vw.ifchange) {
-                            if (position == 0) {
-                                linear = this
-                                this.backgroundColor=Color.argb(100,125,125,125)
-                            }
-                        }else{
-                            if (position == vm.vw.position) {
-                                linear = this
-                                this.backgroundColor=Color.argb(100,125,125,125)
-                            }
-                        }
-
-                        setOnClickListener {
-                            vm.vw.checkid=item.getInt("id")
-                            vm.vw.position=position
-                            vm.vw.txtStandVaue.text=general.getString(item,"stdvalue")
-                            vm.changeValue(item)
-                            vm.vw.ifchange=false
-                            if(linear!=null)
-                              linear!!.backgroundColor=Color.rgb(255,255,255)
-
-                            linear=this
-                            this.backgroundColor=Color.argb(100,125,125,125)
-                        }
                     }.lparams {
                         horizontalPadding = dip(8)
                         topPadding = dip(8)
-                        /*leftPadding=dip(5)
-                        rightPadding=dip(5)*/
-                       // backgroundColor=Color.rgb(128,128,128)
-                       /* if(item.getInt("id")==1)
-                         backgroundColor=Color.rgb(0,0,255)
-                        else
-                            backgroundColor=Color.rgb(255,0,255)*/
                     }
                 }
             }

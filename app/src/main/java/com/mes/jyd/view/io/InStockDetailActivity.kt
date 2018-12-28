@@ -7,27 +7,17 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.TextInputLayout
 import android.support.v4.content.ContextCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.Toolbar
 import android.text.InputType
-import android.view.Gravity
-import android.view.MenuItem
-import android.view.View
 import android.widget.*
 import com.mes.jyd.R
 import com.mes.jyd.adapter.io.InStockDetailAdapter
-import com.mes.jyd.adapter.product.ProductCheckAdapter
-import com.mes.jyd.adapter.product.ProductInspectCheckAdapter
 import com.mes.jyd.base.BaseActivity
 import com.mes.jyd.delegate.ParaSave
-import com.mes.jyd.entity.CheckItem
 import com.mes.jyd.util.general
-import com.mes.jyd.view.product.ProductInspectCheckActivity
 import com.mes.jyd.viewModel.io.InStockDetailViewModel
-import com.mes.jyd.viewModel.product.ProductCheckViewModel
-import com.mes.jyd.viewModel.product.ProductInspectCheckViewModel
 import org.jetbrains.anko.*
 import org.jetbrains.anko.appcompat.v7.coroutines.onMenuItemClick
 import org.jetbrains.anko.appcompat.v7.toolbar
@@ -35,7 +25,6 @@ import org.jetbrains.anko.design.coordinatorLayout
 import org.jetbrains.anko.design.textInputEditText
 import org.jetbrains.anko.design.textInputLayout
 import org.jetbrains.anko.sdk25.coroutines.onClick
-import org.jetbrains.anko.sdk25.coroutines.onFocusChange
 import org.jetbrains.anko.sdk25.coroutines.onScrollListener
 import org.jetbrains.anko.support.v4.swipeRefreshLayout
 import org.json.JSONObject
@@ -338,7 +327,7 @@ class InStockDetailActivity:BaseActivity(){
                             button {
                                 text = "取消"
                                 onClick {
-                                    dialog!!.cancel()
+                                    dialoglgort!!.cancel()
                                 }
                             }
 

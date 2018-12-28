@@ -1,21 +1,13 @@
-package com.mes.jyd.viewModel.product
+package com.mes.jyd.viewModel.check
 
-import android.R
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
-import android.view.View
-import android.widget.ArrayAdapter
 import com.mes.jyd.adapter.SpinnerAdapter
 import com.mes.jyd.delegate.ArithUtil
-import com.mes.jyd.util.general
-import com.mes.jyd.view.product.ProductCheckActivity
-import com.mes.jyd.view.product.ProductInspectActivity
-import com.mes.jyd.view.product.ProductInspectCheckActivity
+import com.mes.jyd.view.check.ProductInspectActivity
+import com.mes.jyd.view.check.ProductInspectCheckActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.custom.customView
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -42,6 +34,7 @@ class ProductInspectViewModel(val vw: ProductInspectActivity, val ctx: Context) 
 
         vw.apiService().getinspectitem(
             vw.userid,
+            4,
             _p
         )
             .subscribeOn(Schedulers.io())
@@ -111,21 +104,19 @@ class ProductInspectViewModel(val vw: ProductInspectActivity, val ctx: Context) 
                     if (t?.getBoolean("success")!!) {
                         val data=t.getJSONArray("data")
                         vw.srArr=data
-                        if(vw.state==1){
-                            vw.txthint.setText("操作成功")
-                        }
+
+                        vw.showTextToast("操作成功")
+                        vw.txtProduct.setText(bc)
                         listgetstring()
                     } else {
-                        vw.showTextToast(t.getString("msg") ?: "error")
-                        if(vw.state==1){
-                            vw.txthint.setText(t.getString("msg") ?: "error")
-                        }
+                        var msg1=t.getString("msg") ?: "error"
+                        vw.showTextToast(bc+"-"+msg1)
+
                     }
                 }, { t: Throwable? ->
-                    vw.showTextToast(t?.message ?: "error")
-                    if(vw.state==1){
-                        vw.txthint.setText(t?.message ?: "error")
-                    }
+                    var msg2=t?.message ?: "error"
+                    vw.showTextToast(bc+"-"+msg2)
+
                 }
             )
     }
@@ -165,7 +156,7 @@ class ProductInspectViewModel(val vw: ProductInspectActivity, val ctx: Context) 
     //根据批次和工序id新增巡检项
     fun getadddata(){
         if(vw.chooseIndex<0||vw.srArr.length()<1||vw.chooseIndex>=vw.srArr.length()){
-            vw.txthint.setText("请先选择工序")
+            vw.showTextToast("请先选择工序")
             return
         }
         //获取工序信息
@@ -193,15 +184,15 @@ class ProductInspectViewModel(val vw: ProductInspectActivity, val ctx: Context) 
 
                     } else {
                         vw.showTextToast(t.getString("msg") ?: "error")
-                        if(vw.state==1){
+                       /* if(vw.state==1){
                             vw.txthint.setText(t.getString("msg") ?: "error")
-                        }
+                        }*/
                     }
                 }, { t: Throwable? ->
                     vw.showTextToast(t?.message ?: "error")
-                    if(vw.state==1){
+                   /* if(vw.state==1){
                         vw.txthint.setText(t?.message ?: "error")
-                    }
+                    }*/
                 }
             )
         
@@ -210,7 +201,7 @@ class ProductInspectViewModel(val vw: ProductInspectActivity, val ctx: Context) 
 
     //重新设置标题
     fun setText(){
-        vw._toolbar.subtitle=vw.count.toString()+"/"+vw.counts.toString()
+        vw._toolbar.title=vw._title+"("+vw.count.toString()+"/"+vw.counts.toString()+")"
     }
 
 }

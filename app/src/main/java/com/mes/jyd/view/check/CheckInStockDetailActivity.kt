@@ -1,10 +1,14 @@
-package com.mes.jyd.view.product
+package com.mes.jyd.view.check
 
+import android.app.Activity
 import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.TextInputLayout
+import android.support.v4.content.ContextCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.Toolbar
 import android.text.InputType
@@ -12,10 +16,12 @@ import android.view.Gravity
 import android.view.View
 import android.widget.*
 import com.mes.jyd.R
-import com.mes.jyd.adapter.product.ProductCheckAdapter
+import com.mes.jyd.adapter.check.CheckInStockDetailAdapter
+import com.mes.jyd.adapter.check.ProductInspectCheckAdapter
 import com.mes.jyd.base.BaseActivity
-import com.mes.jyd.viewModel.product.ProductCheckViewModel
-import kotlinx.android.synthetic.main.looper_activity2.view.*
+import com.mes.jyd.delegate.ParaSave
+import com.mes.jyd.viewModel.check.CheckInStockDetailViewModel
+import com.mes.jyd.viewModel.check.ProductInspectCheckViewModel
 import org.jetbrains.anko.*
 import org.jetbrains.anko.appcompat.v7.toolbar
 import org.jetbrains.anko.design.coordinatorLayout
@@ -26,10 +32,10 @@ import org.jetbrains.anko.sdk25.coroutines.onFocusChange
 import org.jetbrains.anko.sdk25.coroutines.onScrollListener
 import org.jetbrains.anko.support.v4.swipeRefreshLayout
 
-class ProductCheckActivity:BaseActivity(){
-    private lateinit var vm: ProductCheckViewModel
-    private  lateinit var vw: ProductCheckActivity
-    lateinit var listAdapter: ProductCheckAdapter
+class CheckInStockDetailActivity:BaseActivity(){
+    private lateinit var vm: CheckInStockDetailViewModel
+    private  lateinit var vw: CheckInStockDetailActivity
+    lateinit var listAdapter: CheckInStockDetailAdapter
 
     lateinit var refreshLayout: SwipeRefreshLayout
     lateinit var mainLayout: CoordinatorLayout
@@ -42,37 +48,44 @@ class ProductCheckActivity:BaseActivity(){
     lateinit var txtStandVaue:TextView //标准值
     lateinit var txtValue: EditText //检测值
     lateinit var checkValue:CheckBox
+    lateinit var checkValue1:CheckBox //是否排查
     lateinit var  _textInputLayout:TextInputLayout
     lateinit var  layoutvalue:LinearLayout
     lateinit var  layoutcheck:LinearLayout
 
-     var checkid:Int=0 //检测项主键
+    var checkid:Int=0 //检测项主键
     var position:Int=-1 //本次检验的位置
     var ifchange=true //是否重新加载 如果重新加载默认选中第一条
     lateinit var btnSubmit:Button //提交按钮
 
     var userid=0
-    var pnid=0
+    var id=0
 
-    var titletext="生产过程检验"
+    var titletext="入库检验"
     var countcheck=0 //已检验数量
     var count=0 //总数
 
 
-    lateinit var scanAlert: DialogInterface
+     var dialog: DialogInterface?=null
     var name = ""
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        userid=intent.getIntExtra("userid",0)
-        pnid=intent.getIntExtra("pnid",0)
+        userid= ParaSave.getUserId(this).toInt()
+        id=intent.getIntExtra("id",0)
         super.onCreate(savedInstanceState)
     }
 
 
     override fun initParams(args: Bundle?) {
-        vm = ProductCheckViewModel(this, this)
+        vm = CheckInStockDetailViewModel(this, this)
         vw=this
-        listAdapter= ProductCheckAdapter(vm)
+        listAdapter= CheckInStockDetailAdapter(vm)
+
+        /*var bundle=intent.getBundleExtra("bb")
+        var arrlist=bundle.getSerializable("list") as ArrayList<CheckItem>
+        var json=arrlist[0]
+        Toast.makeText(this,json.name,Toast.LENGTH_SHORT).show()*/
 
     }
 
@@ -89,6 +102,17 @@ class ProductCheckActivity:BaseActivity(){
                 setNavigationOnClickListener {
                     finish()
                 }
+
+                /*inflateMenu(R.menu.oneout)
+
+                onMenuItemClick {
+                    item->
+                    when(item!!.itemId){
+                        R.id.menu_out_one->{
+                            //提交事件
+                        }
+                    }
+                }*/
             }.lparams(width = matchParent)
             //主框架开始
             linearLayout {
@@ -166,13 +190,13 @@ class ProductCheckActivity:BaseActivity(){
 
                     linearLayout{
                         orientation=LinearLayout.VERTICAL
+
                         layoutvalue=linearLayout {
-                          //  visibility = View.GONE
                             orientation = LinearLayout.VERTICAL
+                           // visibility = View.GONE
                             txtStandVaue = textView {
                                 text = "标准值"
                                 textSize = 18f
-                                visibility = View.GONE
                             }.lparams(width = matchParent) {
                                 height = dip(30)
                             }
@@ -184,7 +208,7 @@ class ProductCheckActivity:BaseActivity(){
                                     // setText()
                                     singleLine = true
 
-                                    onClick {
+                                    /*onClick {
                                         HideKeyboard(vw)
                                     }
 
@@ -192,9 +216,8 @@ class ProductCheckActivity:BaseActivity(){
                                         ->
                                         if (hasFocus)
                                             HideKeyboard(vw)
-                                    }
+                                    }*/
                                 }
-                                visibility = View.GONE
                             }.lparams(width = matchParent) {
                                 height = dip(50)
                             }
@@ -204,9 +227,9 @@ class ProductCheckActivity:BaseActivity(){
                         }
 
                         layoutcheck =  linearLayout {
-                         //   visibility=View.GONE
                             orientation=LinearLayout.VERTICAL
                             gravity=Gravity.CENTER_VERTICAL
+                          //  visibility=View.GONE
                             linearLayout {
                                 orientation = LinearLayout.HORIZONTAL
 
@@ -234,7 +257,6 @@ class ProductCheckActivity:BaseActivity(){
                         }
 
 
-
                     }.lparams{
                         height= matchParent
                         weight=4f
@@ -248,10 +270,12 @@ class ProductCheckActivity:BaseActivity(){
                                 /*listAdapter.linear!!.setVisibility(View.GONE)
                                 listAdapter.linear1!!.callOnClick()*/
                                 vm.savecheck()
+
                             }
                         }.lparams {
                             margin = dip(3)
                             padding=dip(3)
+                            height = dip(60)
                             height = dip(60)
                         }
 
@@ -271,14 +295,100 @@ class ProductCheckActivity:BaseActivity(){
     }
 
     override fun doBusiness() {
-        vm.getdata()
+       vm.getdata()
     }
 
     override fun onResume() {
         super.onResume()
     }
 
+    override fun finish() {
+        var _intent= Intent()
+        setResult(Activity.RESULT_OK,_intent)
 
+        super.finish()
+    }
+
+    fun alerrtDialog(){
+       dialog= alert{
+           customView {
+               verticalLayout {
+                   isFocusable = true
+                   isFocusableInTouchMode = true
+                   isCancelable = false
+                   toolbar {
+                       lparams(width = matchParent, height = wrapContent)
+                       backgroundColor = ContextCompat.getColor(ctx, R.color.colorAccent)
+                       title = "确认框"
+                   }
+                   // backgroundColor=Color.rgb(128,128,128)
+                   /*textView {
+                       text = "确认框"
+                       textSize = 21f
+                       textColor = R.color.colorAccent
+                       typeface = Typeface.create("Roboto-medium", Typeface.NORMAL)
+
+                       gravity = Gravity.START
+                   }.lparams(width = matchParent) {
+                       topMargin = dip(16)
+                       horizontalMargin = dip(16)
+                       horizontalGravity = Gravity.START
+                   }*/
+
+                   verticalLayout {
+                       linearLayout {
+                           orientation = LinearLayout.HORIZONTAL
+                           textView {
+                               text = "是否排查" //tagObj.scanTag(12)
+                               textSize = 21f
+                               typeface = Typeface.create("Roboto-medium", Typeface.NORMAL)
+                           }.lparams {
+                               verticalMargin = dip(24)
+                               verticalGravity = Gravity.CENTER
+                           }
+
+                           checkValue1=checkBox {
+                               width = dip(50)
+                               height = dip(50)
+                               buttonDrawableResource = R.xml.checkbox_style
+                           }.lparams {
+                               height = dip(50)
+                           }
+
+                       }.lparams {
+                           width = matchParent
+                           height = dip(100)
+                           topMargin = dip(16)
+                       }
+
+                       relativeLayout {
+
+                           button {
+                               text = "提交"
+                               onClick {
+                                    var ifcheck=checkValue1.isChecked
+                                 //  vm.change()
+                                   var isc=0
+                                   if(ifcheck)
+                                       isc=1
+                                   vm.checks(isc)
+                                   //dialog!!.cancel()
+                               }
+                           }.lparams {
+                               alignParentRight()
+                           }
+                       }.lparams(width = matchParent) {
+                           horizontalMargin = dip(16)
+                           verticalMargin = dip(24)
+                       }
+                   }
+               }
+           }
+           onCancelled {
+
+           }
+        }.show()
+    }
 
 
 

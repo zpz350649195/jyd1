@@ -86,7 +86,7 @@ class ProductDetailAdapter(viewModel: ProductViewModel):BaseAdapter() {
                         textView {
                             val t = "产品编码: ${item.getString("mapno")}"
                             text = t
-                            textSize = 17f
+                            textSize = 20f
                             textColor = Color.argb(85, 0, 0, 0)
                         }.lparams {
                             verticalMargin = dip(4)

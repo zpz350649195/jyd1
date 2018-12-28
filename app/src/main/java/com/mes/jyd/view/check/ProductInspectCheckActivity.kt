@@ -1,4 +1,4 @@
-package com.mes.jyd.view.product
+package com.mes.jyd.view.check
 
 import android.app.Activity
 import android.content.DialogInterface
@@ -13,18 +13,15 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.Toolbar
 import android.text.InputType
 import android.view.Gravity
-import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import com.mes.jyd.R
-import com.mes.jyd.adapter.product.ProductCheckAdapter
-import com.mes.jyd.adapter.product.ProductInspectCheckAdapter
+import com.mes.jyd.adapter.check.ProductInspectCheckAdapter
 import com.mes.jyd.base.BaseActivity
-import com.mes.jyd.entity.CheckItem
-import com.mes.jyd.viewModel.product.ProductCheckViewModel
-import com.mes.jyd.viewModel.product.ProductInspectCheckViewModel
+import com.mes.jyd.delegate.ParaSave
+import com.mes.jyd.viewModel.check.ProductInspectCheckViewModel
+import kotlinx.android.synthetic.main.activity_main.view.*
 import org.jetbrains.anko.*
-import org.jetbrains.anko.appcompat.v7.coroutines.onMenuItemClick
 import org.jetbrains.anko.appcompat.v7.toolbar
 import org.jetbrains.anko.design.coordinatorLayout
 import org.jetbrains.anko.design.textInputEditText
@@ -33,7 +30,6 @@ import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.sdk25.coroutines.onFocusChange
 import org.jetbrains.anko.sdk25.coroutines.onScrollListener
 import org.jetbrains.anko.support.v4.swipeRefreshLayout
-import org.json.JSONObject
 
 class ProductInspectCheckActivity:BaseActivity(){
     private lateinit var vm: ProductInspectCheckViewModel
@@ -52,7 +48,8 @@ class ProductInspectCheckActivity:BaseActivity(){
     lateinit var txtValue: EditText //检测值
     lateinit var checkValue:CheckBox
     lateinit var checkValue1:CheckBox //是否排查
-    lateinit var  _textInputLayout:TextInputLayout
+    lateinit var  layoutvalue:LinearLayout
+    lateinit var  layoutcheck:LinearLayout
 
     var checkid:Int=0 //检测项主键
     var position:Int=-1 //本次检验的位置
@@ -72,7 +69,7 @@ class ProductInspectCheckActivity:BaseActivity(){
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        userid=intent.getIntExtra("userid",0)
+        userid= ParaSave.getUserId(this).toInt()
         id=intent.getIntExtra("id",0)
         super.onCreate(savedInstanceState)
     }
@@ -104,16 +101,6 @@ class ProductInspectCheckActivity:BaseActivity(){
                     finish()
                 }
 
-                /*inflateMenu(R.menu.oneout)
-
-                onMenuItemClick {
-                    item->
-                    when(item!!.itemId){
-                        R.id.menu_out_one->{
-                            //提交事件
-                        }
-                    }
-                }*/
             }.lparams(width = matchParent)
             //主框架开始
             linearLayout {
@@ -192,61 +179,67 @@ class ProductInspectCheckActivity:BaseActivity(){
                     linearLayout{
                         orientation=LinearLayout.VERTICAL
 
-                        txtStandVaue=textView{
-                            text="标准值"
-                            textSize=18f
-                        }.lparams(width = matchParent){
-                            height=dip(30)
-                        }
-
-                        _textInputLayout= textInputLayout {
-                            txtValue = textInputEditText {
-                                   hint = "实际值"
-                                  inputType=InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_CLASS_NUMBER
-                               // setText()
-                                singleLine = true
-
-                                onClick {
-                                    HideKeyboard(vw)
-                                }
-
-                                onFocusChange {
-                                        v, hasFocus
-                                    ->
-                                    if(hasFocus)
-                                        HideKeyboard(vw)
-                                }
+                        layoutvalue=linearLayout {
+                           // visibility=View.GONE
+                            orientation=LinearLayout.VERTICAL
+                            txtStandVaue = textView {
+                                text = "标准值"
+                                textSize = 18f
+                            }.lparams(width = matchParent) {
+                                height = dip(30)
                             }
-                            visibility=View.GONE
-                        }.lparams(width = matchParent){
-                            height=dip(50)
+
+                             textInputLayout {
+                                txtValue = textInputEditText {
+                                    hint = "实际值"
+                                    inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_CLASS_NUMBER
+                                    // setText()
+                                    singleLine = true
+
+                                    onClick {
+                                        HideKeyboard(vw)
+                                    }
+
+                                    onFocusChange { v, hasFocus
+                                        ->
+                                        if (hasFocus)
+                                            HideKeyboard(vw)
+                                    }
+                                }
+                            }.lparams(width = matchParent) {
+                                height = dip(50)
+                            }
+                        }.lparams{
+                            width= matchParent
+                            height=dip(80)
                         }
+                        layoutcheck =  linearLayout {
+                            orientation=LinearLayout.VERTICAL
+                            gravity=Gravity.CENTER_VERTICAL
+                         //   visibility=View.GONE
+                            linearLayout {
+                                orientation = LinearLayout.HORIZONTAL
 
-                        checkValue= checkBox {
-                            text="是否合格"
-                            width=dip(50)
+                                textView {
+                                    text = "合格:"
+                                }
 
-                            height=dip(50)
-                            singleLine=true
-                          //  setChecked(false)
+                                checkValue = checkBox {
+                                    width = dip(50)
+                                    height = dip(50)
+                                    singleLine = true
+                                    buttonDrawableResource = R.xml.checkbox_style
+                                }.lparams(width = matchParent) {
+                                    height = dip(50)
+                                }
 
-
-                            buttonDrawableResource=R.xml.checkbox_style
-                           // setChecked(false)
-                            /*onCheckedChange { buttonView, isChecked ->
-                                if(isChecked)
-                                {
-                                    txtStandVaue.text="取消"
-                                }else
-                                    txtStandVaue.text="选中"
-
-                            }*/
-
-                          //  setButtonDrawable(resources.getDrawable(R.xml.checkbox_style))
-                           // setTypeface(Typeface.DEFAULT,R.style.MyCheckBox)
-                           // R.style.MyCheckBox
-                        }.lparams(width = matchParent){
-                            height=dip(50)
+                            }.lparams{
+                                width= matchParent
+                                height=dip(50)
+                            }
+                        }.lparams{
+                            width= matchParent
+                            height=dip(80)
                         }
 
 

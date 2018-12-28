@@ -1,11 +1,11 @@
 package com.mes.jyd.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.KeyEvent
 import android.widget.Toast
 import com.mes.jyd.R
-import com.mes.jyd.base.BaseScanActivity
 import com.mes.jyd.base.scanActivity
 import com.mes.jyd.delegate.AndroidUtil
 import com.mes.jyd.viewModel.LoginViewModel
@@ -94,7 +94,7 @@ class LoginActivity : scanActivity(){
         close()
     }
 
-    private var exitTime: Long = 0
+   /* private var exitTime: Long = 0
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_DOWN) {
@@ -108,6 +108,7 @@ class LoginActivity : scanActivity(){
             return true
         }
         return super.onKeyDown(keyCode, event)
-    }
+    }*/
+
 }
 

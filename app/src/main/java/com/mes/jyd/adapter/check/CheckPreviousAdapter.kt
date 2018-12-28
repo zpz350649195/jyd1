@@ -1,20 +1,19 @@
-package com.mes.jyd.adapter.product
+package com.mes.jyd.adapter.check
 
 import android.graphics.Color
-import android.graphics.Typeface
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.LinearLayout
-import com.mes.jyd.util.general
-import com.mes.jyd.viewModel.product.ProductCheckViewModel
-import com.mes.jyd.viewModel.product.ProductInspectViewModel
+import com.mes.jyd.viewModel.check.CheckPreviousViewModel
+import com.mes.jyd.viewModel.check.ProductInspectViewModel
+import com.mes.jyd.viewModel.check.RejectManageViewModel
 import org.jetbrains.anko.*
 import org.jetbrains.anko.cardview.v7.cardView
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.json.JSONObject
 
-class ProductInspectAdapter(var vm: ProductInspectViewModel): BaseAdapter() {
+class CheckPreviousAdapter(var vm: CheckPreviousViewModel): BaseAdapter() {
     //生产计划数据
     var list=vm.list
 
@@ -79,7 +78,7 @@ class ProductInspectAdapter(var vm: ProductInspectViewModel): BaseAdapter() {
                         }
                         //点击按钮检验
                         button {
-                            text="检验"
+                            text="质量确认"
 
                             onClick {
                                 //跳转

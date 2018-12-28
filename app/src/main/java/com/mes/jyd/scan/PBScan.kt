@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.view.KeyEvent
-import com.example.iscandemo.ScannerInerface
 import com.mes.jyd.api.InfScan
 import com.mes.jyd.base.scanActivity
 
@@ -45,10 +44,10 @@ class PBScan : InfScan {
     }
 
     override fun open() {
-        val filter = IntentFilter(SCANACTION)
+/*        val filter = IntentFilter(SCANACTION)
         filter.setPriority(Int.MAX_VALUE)
 
-        context.registerReceiver(receiver, filter)
+        context.registerReceiver(receiver, filter)*/
     }
 
     override fun scan() {
@@ -69,10 +68,6 @@ class PBScan : InfScan {
 */
 
     override fun close() {
-        /*val toKillService = Intent()
-        toKillService.action = ACTION_CLOSE_SCAN
-        context.sendBroadcast(toKillService)*/
-        context.unregisterReceiver(receiver)
     }
 
 

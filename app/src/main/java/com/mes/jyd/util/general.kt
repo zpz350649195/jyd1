@@ -14,4 +14,11 @@ object general {
 
         return rv
     }
+
+    fun getScanTag(i:Int):String{
+        return  when(i){
+            1->"摄像头扫码"
+            else->""
+        }
+    }
 }

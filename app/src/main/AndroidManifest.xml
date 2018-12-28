@@ -75,13 +75,23 @@
 
         <activity android:name=".view.product.ProductCheckActivity" android:theme="@style/MyTheme"/>
 
-        <activity android:name=".view.product.ProductInspectActivity" android:theme="@style/MyTheme"/>
+        <activity android:name=".view.check.ProductInspectActivity" android:theme="@style/MyTheme"/>
 
-        <activity android:name=".view.product.ProductInspectCheckActivity" android:theme="@style/MyTheme"/>
+        <activity android:name=".view.check.ProductInspectCheckActivity" android:theme="@style/MyTheme"/>
 
         <activity android:name=".view.io.InStockActivity" android:theme="@style/MyTheme" />
         <activity android:name=".view.io.InStockDetailActivity" android:theme="@style/MyTheme" />
 
+
+        <activity android:name=".view.check.CheckInStockActivity" android:theme="@style/MyTheme" />
+        <activity android:name=".view.check.CheckInStockItemActivity" android:theme="@style/MyTheme" />
+        <activity android:name=".view.check.CheckInStockDetailActivity" android:theme="@style/MyTheme" />
+
+        <activity android:name=".view.check.RejectManageActivity" android:theme="@style/MyTheme" />
+        <activity android:name=".view.check.RejectManageDetailActivity" android:theme="@style/MyTheme" />
+
+        <activity android:name=".view.check.CheckPreviousActivity" android:theme="@style/MyTheme" />
+        <activity android:name=".view.check.CheckPreviousDetailActivity" android:theme="@style/MyTheme" />
 
 
     </application>

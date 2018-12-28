@@ -1,4 +1,4 @@
-package com.mes.jyd.adapter.product
+package com.mes.jyd.adapter.check
 
 import android.graphics.Color
 import android.graphics.Typeface
@@ -7,12 +7,13 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.LinearLayout
 import com.mes.jyd.util.general
-import com.mes.jyd.viewModel.product.ProductCheckViewModel
+import com.mes.jyd.viewModel.check.CheckInStockDetailViewModel
+import com.mes.jyd.viewModel.check.ProductInspectCheckViewModel
 import org.jetbrains.anko.*
 import org.jetbrains.anko.cardview.v7.cardView
 import org.json.JSONObject
 
-class ProductCheckAdapter(viewModel: ProductCheckViewModel): BaseAdapter() {
+class CheckInStockDetailAdapter(viewModel: CheckInStockDetailViewModel): BaseAdapter() {
     //生产计划数据
     var vm=viewModel
     var list=vm.list

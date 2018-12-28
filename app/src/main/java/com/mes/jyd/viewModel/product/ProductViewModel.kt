@@ -3,14 +3,19 @@ package com.mes.jyd.viewModel.product
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
+import android.support.v4.content.ContextCompat
 import android.view.Gravity
 import android.view.View
+import android.widget.Toast
 import com.mes.jyd.R
 import com.mes.jyd.delegate.*
+import com.mes.jyd.util.general
 import com.mes.jyd.view.product.ProductActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.*
+import org.jetbrains.anko.appcompat.v7.navigationIconResource
+import org.jetbrains.anko.appcompat.v7.toolbar
 import org.jetbrains.anko.design.textInputEditText
 import org.jetbrains.anko.design.textInputLayout
 import org.jetbrains.anko.sdk25.coroutines.onClick
@@ -74,114 +79,13 @@ class ProductViewModel(val vw: ProductActivity, val ctx: Context) {
         }
     }
 
-    fun changeline(){
-        //更改产线
-        vw.ifchangeline=true
-        vw.dialogline = vw.alert {
-                customView {
-                    verticalLayout {
-                        isFocusable = true
-                        isFocusableInTouchMode = true
-                        lparams {
-                            verticalMargin = dip(8)
-                        }
-                        relativeLayout{
-                            textView {
-                                text = "产线工位信息"
-                                textSize = 21f
-                                textColor = R.color.colorAccent
-                                typeface = Typeface.create("Roboto-medium", Typeface.NORMAL)
-                                /*onClick {
-                                    // startActivity<AntichannelingCodeListActivity>()
-                                }*/
-                                isEnabled=false
-                            }.lparams(width = matchParent) {
-                                topMargin = dip(3)
-                                horizontalMargin = dip(5)
-                            }
-
-                            imageView {
-                                imageResource = R.drawable.ic_close_24dp
-                                onClick {
-                                    vw.dialogline.cancel()
-                                }
-                            }.lparams {
-                                topMargin = dip(3)
-                                height = wrapContent
-                                width = wrapContent
-                                alignParentRight()
-                            }
-                        }
-
-                       vw._linetext= textView {
-                            text = "产线" //tagObj.scanTag(12)
-                            textSize = 15f
-                            typeface = Typeface.create("Roboto-medium", Typeface.NORMAL)
-                            gravity = Gravity.LEFT
-                        }.lparams(width = matchParent) {
-
-                           topMargin=dip(12)
-                            horizontalGravity = Gravity.CENTER_HORIZONTAL
-                        }
-
-                        textInputLayout {
-                            vw._linevalue = textInputEditText {
-                               // hint = "产线"
-                                setText(vw.linename)
-                                singleLine = false
-                                isEnabled=false
-                            }
-                        }.lparams(width = matchParent)
-
-                        vw._positiontext= textView {
-                            text = "工位" //tagObj.scanTag(12)
-                            textSize = 15f
-                            typeface = Typeface.create("Roboto-medium", Typeface.NORMAL)
-                            gravity = Gravity.LEFT
-                        }.lparams(width = matchParent) {
-                            topMargin = dip(12)
-                            horizontalGravity = Gravity.CENTER_HORIZONTAL
-                        }
-
-                        textInputLayout {
-                            vw._positionvalue = textInputEditText {
-                             //   hint = "工位"
-                                setText(vw.positionname)
-                                singleLine = false
-                                isEnabled=false
-                            }
-                        }.lparams(width = matchParent)
-
-                        button {
-                            text="更换工位"
-                            textSize=20f
-                            backgroundColor=Color.argb(85,0,0,200)
-                            textColor=Color.argb(85,0,0,0)
-
-                            onClick {
-                                //调用接口
-
-                            }
-                        }.lparams{
-                            width= wrapContent
-                            padding=dip(15)
-                            margin=dip(10)
-                            gravity=Gravity.CENTER
-                        }
-                    }
-                }
-                onCancelled {
-                    vw.ifchangeline=false
-                }
-            }.show()
-    }
 
     fun initlineposition(){
         vw._linevalue.setText(vw.linename)
         vw._positionvalue.setText(vw.positionname)
     }
 
-    fun productscan(){
+    fun productscan(num:Int){
         //基础判断 用户id不能为空
         if(vw.userid==-1){
             vw.toast("用户Id不存在，请重新登录")
@@ -224,7 +128,8 @@ class ProductViewModel(val vw: ProductActivity, val ctx: Context) {
         vw.apiService().productscan(
             vw.userid,
            _pnid,
-            vw.bc
+            vw.bc,
+            num
         )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -247,6 +152,12 @@ class ProductViewModel(val vw: ProductActivity, val ctx: Context) {
                             return@subscribe
                         }
 
+                        var _ifnum=t.getInt("ifnum")
+                        if(_ifnum==1){
+                            vw.writenum()
+                            return@subscribe
+                        }
+
                         if(_pnid==0){//如果是在选择产线
                             vw.positionid=t.getInt("positionid")
                             vw.positionname=t.getString("positionname")
@@ -260,20 +171,27 @@ class ProductViewModel(val vw: ProductActivity, val ctx: Context) {
                         }*/
                         changepage(_pageid)
                         vw.txtmsg.text=t.getString("msg") ?: "error"
-
                         if(vw.ifchangeline){
                             vw.dialogline.cancel()
                         }
 
+                        if(vw.isnum==1){
+                            vw.dialognum.cancel()
+                        }
+                        var msg=t.getString("msg")
+                        if(msg!="") {
+                            Toast.makeText(vw,t.getString("msg"), Toast.LENGTH_SHORT).show()
+                            vw.txtmsg.text = t.getString("msg")
+                        }
                     } else {
                        // ctx.toast(t.getString("msg") ?: "error")
-                        if(vw.ifchangeline)//如果是在选择工位 则悬浮提示
-                            ctx.toast(t.getString("msg") ?: "error")
-                        else
-                            vw.txtmsg.text=t.getString("msg") ?: "error"
+
+                        Toast.makeText(vw,t.getString("msg") ?: "error", Toast.LENGTH_SHORT).show()
+                        vw.txtmsg.text=t.getString("msg") ?: "error"
                     }
                 }, { t: Throwable? ->
                     vw.txtmsg.text=t?.message ?: "error"
+                    Toast.makeText(vw,t?.message ?: "error", Toast.LENGTH_SHORT).show()
                 }
             )
 

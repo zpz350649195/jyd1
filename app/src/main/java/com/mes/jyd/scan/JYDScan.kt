@@ -5,14 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.view.KeyEvent
-import com.example.iscandemo.ScannerInerface
 import com.mes.jyd.api.InfScan
 import com.mes.jyd.base.scanActivity
 
 class JYDScan : InfScan {
 
     private lateinit var rr: BroadcastReceiver
-    lateinit var scan: ScannerInerface
 
     lateinit var context:Context
     lateinit var _as:scanActivity
@@ -25,12 +23,8 @@ class JYDScan : InfScan {
 
     }
 
+
     override fun bind(){
-        scan= ScannerInerface(context)
-        //设置返回字符串为UTF-8
-        scan.setCharSetMode(4)
-        //扫描为广播形式 0为直接发送到编辑框
-        scan.setOutputMode(1)
         /* setScanMode(0)
          val intent = Intent()
          intent.action = ACTION_SCAN_INIT
@@ -44,19 +38,23 @@ class JYDScan : InfScan {
     }
 
     override fun open() {
-        val filter = IntentFilter("android.intent.action.SCANRESULT")
+
+
+        //發送廣播消息告訴 OS 採用“消息廣播”方式
+        val send = Intent("df.scanservice.toapp")
+        context.sendBroadcast(send)
+
+        val filter = IntentFilter("df.scanservice.result")
 
         context.registerReceiver(receiver, filter)
-        scan.open()
     }
 
     override fun scan() {
         /*val intent = Intent()
         intent.action = ACTION_SCAN
         context.sendBroadcast(intent)*/
-
-
-        scan.scan_start()
+        val send = Intent("df.scanservice.start")
+        context.sendBroadcast(send)
 
     }
 
@@ -73,8 +71,11 @@ class JYDScan : InfScan {
         /*val toKillService = Intent()
         toKillService.action = ACTION_CLOSE_SCAN
         context.sendBroadcast(toKillService)*/
+        /** 注销广播 * */
         context.unregisterReceiver(receiver)
-        scan.close()
+       //切換到“virtual key”模式
+        val send = Intent("df.scanservice.cancelapp")
+        context.sendBroadcast(send)
     }
 
 
@@ -99,13 +100,16 @@ class JYDScan : InfScan {
         }
     }
 
+
     private var exitTime: Long = 0
 
     val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-
-            val scanResult = intent.getStringExtra("value")
-            _as.showResult(scanResult)
+            if (System.currentTimeMillis() - exitTime > 1000) {
+                val scanResult = intent.getStringExtra("result")
+                _as.showResult(scanResult)
+                exitTime = System.currentTimeMillis()
+            }
             /*if (System.currentTimeMillis() - exitTime > 1500) {
                 *//*var data = intent.getByteArrayExtra("data")
                  var barcode: String = ""

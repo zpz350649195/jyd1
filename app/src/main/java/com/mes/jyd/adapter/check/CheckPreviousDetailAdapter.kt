@@ -1,4 +1,4 @@
-package com.mes.jyd.adapter.product
+package com.mes.jyd.adapter.check
 
 import android.graphics.Color
 import android.graphics.Typeface
@@ -6,14 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.LinearLayout
+import com.mes.jyd.R
 import com.mes.jyd.util.general
-import com.mes.jyd.viewModel.product.ProductCheckViewModel
-import com.mes.jyd.viewModel.product.ProductInspectCheckViewModel
+import com.mes.jyd.viewModel.check.CheckPreviousDetailViewModel
+import com.mes.jyd.viewModel.check.ProductInspectCheckViewModel
+import com.mes.jyd.viewModel.check.RejectManageDetailViewModel
 import org.jetbrains.anko.*
 import org.jetbrains.anko.cardview.v7.cardView
+import org.jetbrains.anko.sdk25.coroutines.onCheckedChange
 import org.json.JSONObject
 
-class ProductInspectCheckAdapter(viewModel: ProductInspectCheckViewModel): BaseAdapter() {
+class CheckPreviousDetailAdapter(viewModel: CheckPreviousDetailViewModel): BaseAdapter() {
     //生产计划数据
     var vm=viewModel
     var list=vm.list
@@ -121,18 +124,55 @@ class ProductInspectCheckAdapter(viewModel: ProductInspectCheckViewModel): BaseA
                             }
                         }
 
+                        /*if (item.getBoolean("isvalue")) {
+                            //检测结果
+                            textView {
+                                val t = "检验结果: ${general.getString(item, "relvalue")}"
+                                text = t
+                                textSize = 17f
+                            }
+                        }*/
+
                         relativeLayout {
-                            if (item.getBoolean("isvalue")) {
-                                //检测结果
-                                textView {
-                                    val t = "检验结果: ${general.getString(item, "relvalue")}"
-                                    text = t
-                                    textSize = 17f
-                                }
+
+                            textView {
+                                val t = "综合判定"
+                                text = t
+                                textSize = 17f
                             }
 
+                            var t1=general.getString(item, "checkresult")
+                            item.put("checkresult",t1)
+                            /*if(t1=="0")
+                                item.put("checkresult",false)
+                            else if(t1=="")
+                                item.put("checkresult",false)
+                            else
+                                item.put("checkresult",true)*/
+
                             //是否合格
-                            textView {
+                            checkBox {
+                                width = dip(50)
+                                height = dip(50)
+                                buttonDrawableResource = R.xml.checkbox_style
+                                if(item.getString("checkresult")=="1"){
+                                    isChecked=true
+                                }
+
+                                onCheckedChange { buttonView, isChecked ->
+                                    if(item.getString("checkresult")=="1"){
+                                        item.put("checkresult","0")
+                                    }else{
+                                        item.put("checkresult","1")
+                                    }
+
+                                }
+                            }.lparams {
+                                height = dip(50)
+                                alignParentRight()
+                            }
+
+                            /*textView {
                                 var t1=general.getString(item, "checkresult")
                                 if(t1=="0")
                                      t1="不合格"
@@ -148,47 +188,13 @@ class ProductInspectCheckAdapter(viewModel: ProductInspectCheckViewModel): BaseA
                                 }
                             }.lparams {
                                 alignParentRight()
-                            }
+                            }*/
+
                         }
 
-
-
-
-
-                        if(vm.vw.ifchange) {
-                            if (position == 0) {
-                                linear = this
-                                this.backgroundColor=Color.argb(100,125,125,125)
-                            }
-                        }else{
-                            if (position == vm.vw.position) {
-                                linear = this
-                                this.backgroundColor=Color.argb(100,125,125,125)
-                            }
-                        }
-
-                        setOnClickListener {
-                            vm.vw.checkid=item.getInt("id")
-                            vm.vw.position=position
-                            vm.vw.txtStandVaue.text=item.getString("stdvalue")
-                            vm.changeValue(item)
-                            vm.vw.ifchange=false
-                            if(linear!=null)
-                              linear!!.backgroundColor=Color.rgb(255,255,255)
-
-                            linear=this
-                            this.backgroundColor=Color.argb(100,125,125,125)
-                        }
                     }.lparams {
                         horizontalPadding = dip(8)
                         topPadding = dip(8)
-                        /*leftPadding=dip(5)
-                        rightPadding=dip(5)*/
-                       // backgroundColor=Color.rgb(128,128,128)
-                       /* if(item.getInt("id")==1)
-                         backgroundColor=Color.rgb(0,0,255)
-                        else
-                            backgroundColor=Color.rgb(255,0,255)*/
                     }
                 }
             }

@@ -1,11 +1,9 @@
-package com.mes.jyd.viewModel.product
+package com.mes.jyd.viewModel.check
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.view.View
 import com.mes.jyd.util.general
-import com.mes.jyd.view.product.ProductInspectCheckActivity
+import com.mes.jyd.view.check.ProductInspectCheckActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONArray
@@ -66,8 +64,8 @@ class ProductInspectCheckViewModel(val vw: ProductInspectCheckActivity, val ctx:
         var _value=general.getString(item,"relvalue")
         if(!item.getBoolean("isvalue")){//用checkbox
             _value=general.getString(item,"checkresult")
-            vw._textInputLayout.visibility=View.GONE
-            vw.checkValue.visibility=View.VISIBLE
+            vw.layoutvalue.visibility=View.GONE
+            vw.layoutcheck.visibility=View.VISIBLE
 
             vw.checkValue.setChecked(false)
 
@@ -78,8 +76,8 @@ class ProductInspectCheckViewModel(val vw: ProductInspectCheckActivity, val ctx:
             }
         }else{
 
-            vw._textInputLayout.visibility=View.VISIBLE
-            vw.checkValue.visibility=View.GONE
+            vw.layoutvalue.visibility=View.VISIBLE
+            vw.layoutcheck.visibility=View.GONE
             if(_value==""){
                 vw.txtValue.text.clear()
             }else
@@ -241,6 +239,8 @@ class ProductInspectCheckViewModel(val vw: ProductInspectCheckActivity, val ctx:
                             //context.toast(t?.toString()!!)
                             if (t?.getBoolean("success")!!) {
                                 vw.dialog!!.cancel()
+                                vw.showTextToast("操作成功")
+                                vw.finish()
                             } else {
                                 vw.showTextToast(t.getString("msg") ?: "error")
                             }

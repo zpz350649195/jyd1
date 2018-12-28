@@ -1,10 +1,13 @@
-package com.mes.jyd.viewModel.io
+package com.mes.jyd.viewModel.check
 
 import android.content.Context
 import android.content.Intent
+import com.mes.jyd.adapter.SpinnerAdapter
 import com.mes.jyd.delegate.ArithUtil
-import com.mes.jyd.view.io.InStockActivity
-import com.mes.jyd.view.io.InStockDetailActivity
+import com.mes.jyd.view.check.CheckInStockActivity
+import com.mes.jyd.view.check.CheckInStockItemActivity
+import com.mes.jyd.view.check.ProductInspectActivity
+import com.mes.jyd.view.check.ProductInspectCheckActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONArray
@@ -14,7 +17,7 @@ import org.json.JSONObject
 /**
  * 生产执行方法集
  */
-class InStockViewModel(val vw: InStockActivity, val ctx: Context) {
+class CheckInStockViewModel(val vw: CheckInStockActivity, val ctx: Context) {
 
 
     var userid = ""
@@ -31,7 +34,7 @@ class InStockViewModel(val vw: InStockActivity, val ctx: Context) {
 
         }
 
-        vw.apiService().getinstockitem(
+        vw.apiService().checkisgetmsg(
             vw.userid,
             _p
         )
@@ -73,13 +76,31 @@ class InStockViewModel(val vw: InStockActivity, val ctx: Context) {
 
     }
 
-    //判断条码是否正确
-    fun judgebc(){
+    fun intentto(id:Int,bc:String){
+        var _intent= Intent(vw._ctx, CheckInStockItemActivity::class.java)
 
-        vw.apiService().instockgetdetail(
+        _intent.putExtra("type","0") //调用类型 0 直接点击id调用 1 通过传入对象数组调用
+        _intent.putExtra("id",id) //id值
+        _intent.putExtra("bc",bc) //条码值
+
+        vw.startActivityForResult(_intent,222)
+
+        /*var bundle= Bundle()
+        bundle.putSerializable("list",itemArr)
+        _intent.putExtra("bb",bundle)
+        startActivity(_intent)*/
+
+    }
+
+    //扫码判断条码是否合理
+    fun judgebc(bc: String){
+        vw.apiService().checkisgetitem(
+            vw.userid,
             0,
-            -1,
-            vw.bc
+            0,
+            bc,
+            0,
+            1
         )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -89,25 +110,23 @@ class InStockViewModel(val vw: InStockActivity, val ctx: Context) {
                 { t: JSONObject? ->
                     //context.toast(t?.toString()!!)
                     if (t?.getBoolean("success")!!) {
-                        intentto(-1)
+                        //页面跳转 弹出框关闭
+                        vw.showTextToast( "操作成功")
+                        //页面跳转
+                        intentto(0,bc)
                     } else {
                         vw.showTextToast(t.getString("msg") ?: "error")
+                        /* if(vw.state==1){
+                             vw.txthint.setText(t.getString("msg") ?: "error")
+                         }*/
                     }
                 }, { t: Throwable? ->
                     vw.showTextToast(t?.message ?: "error")
+                    /* if(vw.state==1){
+                         vw.txthint.setText(t?.message ?: "error")
+                     }*/
                 }
             )
-
-    }
-
-    fun intentto(id:Int){
-        var _intent= Intent(vw._ctx, InStockDetailActivity::class.java)
-
-        _intent.putExtra("type","0") //调用类型 0 直接点击id调用 1 通过传入对象数组调用
-        _intent.putExtra("id",id) //mainid值
-        _intent.putExtra("bc",vw.bc)
-        vw.startActivityForResult(_intent,222)
-
 
     }
 

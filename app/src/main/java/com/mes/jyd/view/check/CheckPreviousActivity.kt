@@ -1,9 +1,8 @@
-package com.mes.jyd.view.product
+package com.mes.jyd.view.check
 
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -15,13 +14,18 @@ import android.view.ViewManager
 import android.widget.*
 import com.mes.jyd.delegate.ListView
 import com.mes.jyd.R
-import com.mes.jyd.adapter.product.ProductInspectAdapter
+import com.mes.jyd.adapter.check.CheckPreviousAdapter
+import com.mes.jyd.adapter.check.ProductInspectAdapter
+import com.mes.jyd.adapter.check.RejectManageAdapter
 import com.mes.jyd.base.scanActivity
 import com.mes.jyd.delegate.ParaSave
 import com.mes.jyd.entity.CheckItem
-import com.mes.jyd.viewModel.product.ProductInspectViewModel
-import kotlinx.android.synthetic.main.activity_main.*
+import com.mes.jyd.util.general
+import com.mes.jyd.viewModel.check.CheckPreviousViewModel
+import com.mes.jyd.viewModel.check.ProductInspectViewModel
+import com.mes.jyd.viewModel.check.RejectManageViewModel
 import org.jetbrains.anko.*
+import org.jetbrains.anko.appcompat.v7.navigationIconResource
 import org.jetbrains.anko.appcompat.v7.toolbar
 import org.jetbrains.anko.custom.ankoView
 import org.jetbrains.anko.design.coordinatorLayout
@@ -29,17 +33,15 @@ import org.jetbrains.anko.design.floatingActionButton
 import org.jetbrains.anko.design.textInputEditText
 import org.jetbrains.anko.design.textInputLayout
 import org.jetbrains.anko.sdk25.coroutines.onClick
-import org.jetbrains.anko.sdk25.coroutines.onItemSelectedListener
 import org.jetbrains.anko.support.v4.swipeRefreshLayout
 import org.json.JSONArray
-import org.json.JSONObject
 import java.lang.Exception
 
-class ProductInspectActivity:scanActivity() {
+class CheckPreviousActivity:scanActivity() {
     //参数
-    var _title="巡检"
-    lateinit var listadapter: ProductInspectAdapter
-    lateinit var  vm:ProductInspectViewModel
+    var _title="质量排查"
+    lateinit var listadapter: CheckPreviousAdapter
+    lateinit var  vm: CheckPreviousViewModel
 
     var userid:Int=-1 //用户Id
     var page:Int=0
@@ -55,6 +57,7 @@ class ProductInspectActivity:scanActivity() {
     lateinit var txtAddTitle: TextView
     lateinit var txtProduct: EditText //产品条码值
     lateinit var txthint:EditText //提示信息
+    var bc="" //保存上次扫码的结果
     var  state=0 //状态 0 弹出框未打开 1 弹出框已打开
 
     lateinit var sr: Spinner
@@ -74,15 +77,7 @@ class ProductInspectActivity:scanActivity() {
 
 
     override fun showResult(barcode: String) {
-        if(state==0){
-            showAlert()
-            txtProduct.setText(barcode)
-        }else{
-            txtProduct.setText(barcode)
-        }
-
-        //根据产品条码获取工序信息
-        vm.gettech(barcode)
+        bc=barcode
       //  sr.setSelection(0,true)
 
 
@@ -90,15 +85,11 @@ class ProductInspectActivity:scanActivity() {
 
     override fun initParams(args: Bundle?) {
         //初始化参数
-        vm= ProductInspectViewModel(this,application.ctx)
-        listadapter= ProductInspectAdapter(vm)
+        vm= CheckPreviousViewModel(this, application.ctx)
+        listadapter= CheckPreviousAdapter(vm)
         userid= ParaSave.getUserId(this).toInt()
         _ctx=application.ctx
         ScanUtil(application.ctx)
-        srString=ArrayList()
-        srArr= JSONArray()
-        srAdapter= ArrayAdapter<String>(this@ProductInspectActivity, android.R.layout.simple_spinner_dropdown_item, srString) //simple_spinner_dropdown_item
-
        // srAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 /*
         srArr= ArrayList()
@@ -164,18 +155,18 @@ class ProductInspectActivity:scanActivity() {
 
 
             //底部添加浮动按钮
-            floatingActionButton {
-                backgroundColor = ContextCompat.getColor(this@ProductInspectActivity, R.color.colorAccent)
+          /*  floatingActionButton {
+                backgroundColor = ContextCompat.getColor(this@RejectManageActivity, R.color.colorAccent)
                 rippleColor= ContextCompat.getColor(this.context,R.color.colorAccent)
                 imageResource=R.drawable.ic_add_24dp
                 onClick {
-                    vm.emptyspinner()
                     showAlert()
+                  //  vm.emptyspinner()
                 }
             }.lparams{
                 margin = dip(16)
                 gravity = Gravity.BOTTOM or Gravity.END
-            }
+            }*/
         }
 
 
@@ -226,142 +217,6 @@ class ProductInspectActivity:scanActivity() {
         }
         _listview.addFooterView(_bottomview)*/
         vm.getdata(0)
-    }
-
-    fun showAlert() {
-        itemAdd = alert {
-            isCancelable=false
-            customView {
-                verticalLayout {
-                   /* backgroundColor = Color.rgb(200, 200, 200)
-                    isFocusable = true
-                    isFocusableInTouchMode = true
-                    lparams {
-                        verticalMargin = dip(8)
-                    }
-                    txtAddTitle = textView {
-                        text = "请扫产品条码"
-                        textSize = 21f
-                        textColor = R.color.colorAccent
-                        typeface = Typeface.create("Roboto-medium", Typeface.NORMAL)
-
-                        backgroundColor = ContextCompat.getColor(ctx, R.color.colorAccent)
-                        gravity = Gravity.START
-                    }.lparams(width = matchParent) {
-                        *//*topMargin = dip(4)
-                        horizontalMargin = dip(16)*//*
-                        leftPadding = dip(5)
-                        topPadding = dip(5)
-                        horizontalGravity = Gravity.START
-                    }*/
-
-                    toolbar {
-                        lparams(width = matchParent, height = wrapContent)
-                        backgroundColor = ContextCompat.getColor(ctx, R.color.colorAccent)
-                        title = "请扫产品条码"
-                    }
-                    verticalLayout {
-                        textInputLayout {
-                            txtProduct = textInputEditText {
-                                hint = "产品条码"
-                                singleLine = true
-                                isEnabled = false
-                            }
-                        }.lparams(width = matchParent)
-                        textView {
-                            text = "请选择工序:" //tagObj.scanTag(12)
-                            textSize = 16f
-                            gravity = Gravity.START
-                        }.lparams(width = matchParent) {
-                            horizontalGravity = Gravity.START
-                        }
-
-                        sr = spinner{
-                            //  dropDownWidth=dip(200)
-                            adapter = srAdapter
-                           // dropDownVerticalOffset=
-                            onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                                override fun onItemSelected(
-                                    parent: AdapterView<*>?,
-                                    view: View?,
-                                    position: Int,
-                                    id: Long
-                                ) {
-                                    chooseIndex = position
-                                    txthint.setText(position.toString())
-                                }
-
-                                override fun onNothingSelected(parent: AdapterView<*>?) {
-                                }
-                            }
-
-                            /* onItemSelectedListener {
-
-                        }*/
-                        }.lparams {
-                            width = matchParent
-
-                        }
-
-
-                        textInputLayout {
-                            txthint = textInputEditText {
-                                hint = "提示信息"
-                                singleLine = true
-                                isEnabled = false
-                            }
-                        }.lparams(width = matchParent)
-
-                        relativeLayout {
-                            button {
-                                text = "返回"
-                                onClick {
-                                    itemAdd.cancel()
-                                }
-                            }.lparams {
-
-                            }
-
-                          /*  button {
-                                text = "查询"
-                                onClick {
-
-                                }
-                            }.lparams {
-                                alignParentRight()
-                            }*/
-
-                            button {
-                                text = "新增"
-                                onClick {
-                                    /*var _intent = Intent(ctx, ProductInspectCheckActivity::class.java)
-
-                                    var bundle = Bundle()
-                                    bundle.putSerializable("list", itemArr)
-                                    _intent.putExtra("bb", bundle)
-                                    startActivity(_intent)*/
-                                    //获取数据
-                                    vm.getadddata()
-                                    //   vm.getCustomByNo(txtCustomNo.text.toString())
-                                }
-                            }.lparams {
-                                alignParentRight()
-                            }
-                        }.lparams(width = matchParent) {
-                            horizontalMargin = dip(16)
-                            verticalMargin = dip(24)
-                        }
-                    }
-                }
-            }
-            onCancelled {
-                //注销扫码服务
-              //  close()
-                state=0
-            }
-
-        }.show()
-        state=1
     }
 
     override fun onResume() {

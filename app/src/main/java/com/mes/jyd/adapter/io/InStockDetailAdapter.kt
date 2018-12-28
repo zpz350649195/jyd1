@@ -1,7 +1,6 @@
 package com.mes.jyd.adapter.io
 
 import android.graphics.Color
-import android.graphics.Typeface
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
@@ -9,8 +8,6 @@ import android.widget.LinearLayout
 import com.mes.jyd.R
 import com.mes.jyd.util.general
 import com.mes.jyd.viewModel.io.InStockDetailViewModel
-import com.mes.jyd.viewModel.product.ProductCheckViewModel
-import com.mes.jyd.viewModel.product.ProductInspectCheckViewModel
 import org.jetbrains.anko.*
 import org.jetbrains.anko.cardview.v7.cardView
 import org.jetbrains.anko.sdk25.coroutines.onCheckedChange
@@ -54,28 +51,7 @@ class InStockDetailAdapter(viewModel: InStockDetailViewModel): BaseAdapter() {
 
                             }.lparams {
                                 width = wrapContent
-                                rightMargin=dip(50)
-                            }
-
-                            checkBox {
-                                width = dip(50)
-                                height = dip(50)
-                                buttonDrawableResource = R.xml.checkbox_style
-                                if(item.getBoolean("ischeck")){
-                                    isChecked=true
-                                }
-
-                                onCheckedChange { buttonView, isChecked ->
-                                    if(item.getBoolean("ischeck")){
-                                        item.put("ischeck",false)
-                                    }else{
-                                        item.put("ischeck",true)
-                                    }
-
-                                }
-                            }.lparams {
-                                height = dip(50)
-                                alignParentRight()
+                              //  rightMargin=dip(50)
                             }
 
                         }.lparams {
@@ -122,18 +98,40 @@ class InStockDetailAdapter(viewModel: InStockDetailViewModel): BaseAdapter() {
                                 verticalMargin = dip(4)
                             }
 
+                        }.lparams {
+                            width= matchParent
+                        }
+
+                        relativeLayout {
                             //是否合格
                             button {
-                               text="修改"
-
+                                text="修改"
                                 onClick {
                                     vm.vw.alerrtDialog(position,item)
                                 }
                             }.lparams {
+                            }
+
+                            checkBox {
+                                width = dip(50)
+                                height = dip(50)
+                                buttonDrawableResource = R.xml.checkbox_style
+                                if(item.getBoolean("ischeck")){
+                                    isChecked=true
+                                }
+
+                                onCheckedChange { buttonView, isChecked ->
+                                    if(item.getBoolean("ischeck")){
+                                        item.put("ischeck",false)
+                                    }else{
+                                        item.put("ischeck",true)
+                                    }
+
+                                }
+                            }.lparams {
+                                height = dip(50)
                                 alignParentRight()
                             }
-                        }.lparams {
-                            width= matchParent
                         }
                     }.lparams {
                         horizontalPadding = dip(8)

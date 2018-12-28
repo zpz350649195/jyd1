@@ -6,11 +6,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.support.v4.content.ContextCompat
+import android.view.KeyEvent
+import android.widget.Toast
 import com.mes.jyd.api.InfScan
 import com.mes.jyd.delegate.AndroidUtil
 import com.mes.jyd.delegate.ParaSave
 import com.mes.jyd.scan.HHSScan
 import com.mes.jyd.scan.JYDScan
+import com.mes.jyd.scan.PBScan
 import com.mes.jyd.view.ScannerActivity
 import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.Permission
@@ -40,6 +43,9 @@ abstract class scanActivity: BaseActivity() {
             _scan=HHSScan()
         else if(_mode=="1")
             _scan=JYDScan()
+        else if(_mode=="2"){//平板手机
+            _scan=PBScan()
+        }
 
         _scan.ScanUtil(context,this)
     }
@@ -91,6 +97,27 @@ abstract class scanActivity: BaseActivity() {
                 showResult(data!!.getStringExtra("barcode"))
             }
         }
+    }
+
+    private var exitTime: Long = 0
+    override  fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+       //
+        if(keyCode==132){
+            scan()
+            return true
+        }
+
+        if (keyCode == KeyEvent.KEYCODE_BACK && event!!.action == KeyEvent.ACTION_DOWN) {
+            if (System.currentTimeMillis() - exitTime > 2000) {
+                Toast.makeText(applicationContext, "再按一次关闭此页",
+                    Toast.LENGTH_SHORT).show()
+                exitTime = System.currentTimeMillis()
+            } else {
+                finish()
+            }
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
     }
 
 }

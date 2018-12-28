@@ -208,4 +208,5 @@ abstract class BaseActivity : AppCompatActivity(), IViewSpecification {
 
     }
 
+
 }

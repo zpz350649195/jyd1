@@ -1,19 +1,21 @@
-package com.mes.jyd.viewModel.product
+package com.mes.jyd.viewModel.check
 
 import android.content.Context
 import android.view.View
 import com.mes.jyd.util.general
-import com.mes.jyd.view.product.ProductCheckActivity
+import com.mes.jyd.view.check.CheckInStockDetailActivity
+import com.mes.jyd.view.check.ProductInspectCheckActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONArray
 import org.json.JSONObject
+import java.lang.Exception
 
 
 /**
  * 生产执行方法集
  */
-class ProductCheckViewModel(val vw: ProductCheckActivity, val ctx: Context) {
+class CheckInStockDetailViewModel(val vw: CheckInStockDetailActivity, val ctx: Context) {
 
 
     var userid = ""
@@ -21,10 +23,8 @@ class ProductCheckViewModel(val vw: ProductCheckActivity, val ctx: Context) {
 
 
     fun getdata(){
-        vw.apiService().getcheckitem(
-            vw.userid,
-            vw.pnid,
-            0
+        vw.apiService().getinspectcheckitem(
+            vw.id
         )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -76,7 +76,6 @@ class ProductCheckViewModel(val vw: ProductCheckActivity, val ctx: Context) {
                 vw.checkValue.setChecked(true)
             }
         }else{
-
             vw.layoutvalue.visibility=View.VISIBLE
             vw.layoutcheck.visibility=View.GONE
             if(_value==""){
@@ -88,6 +87,7 @@ class ProductCheckViewModel(val vw: ProductCheckActivity, val ctx: Context) {
 
     //保存检测结果
     fun savecheck(){
+      //  vw.alerrtDialog()
         if(vw.position>-1) {
             if(list.length()>vw.position){
                 var json: JSONObject = list.getJSONObject(vw.position)
@@ -112,7 +112,7 @@ class ProductCheckViewModel(val vw: ProductCheckActivity, val ctx: Context) {
                 //提交数据到服务器
                 vw.apiService().setcheckresult(
                     vw.userid,
-                    vw.pnid,
+                    0,
                     id,
                     value.toFloat(),
                     checkvalue,
@@ -131,12 +131,16 @@ class ProductCheckViewModel(val vw: ProductCheckActivity, val ctx: Context) {
                                 checkvalue=t.getInt("result")
                                 setvaluetojson(json,value,checkvalue)
                                 /*vw.ifchange=true
-                                vw.position=-1*/
-                                /*vw.listAdapter.linear=null
+                                vw.position=-1
+                                vw.listAdapter.linear=null
                                 vw.listAdapter.rebuild()
                                 vw.refreshLayout.isRefreshing=false*/
-                                change()
                                 vw.showTextToast("提交成功")
+                                if(checkvalue==0){
+                                    vw.alerrtDialog()
+                                }else {
+                                    change()
+                                }
                             } else {
                                 vw.showTextToast(t.getString("msg") ?: "error")
                             }
@@ -165,7 +169,10 @@ class ProductCheckViewModel(val vw: ProductCheckActivity, val ctx: Context) {
     }
     //将检验过的放到最后面
     fun change(){
-        //检验数据提交
+        //若全部检测完成则关闭
+        if(vw.countcheck>=list.length()){
+            vw.finish()
+        }
         if (list.length() > 1) {
             if (vw.position >= 0 && list.length() > vw.position) {
                 val json = list.getJSONObject(vw.position)
@@ -174,13 +181,13 @@ class ProductCheckViewModel(val vw: ProductCheckActivity, val ctx: Context) {
                 if(vw.position!=1&&list.length()>1) {
                     list.remove(vw.position)
                     //获取下一个未检验项目
-                    var nocheck=JSONObject()
-                    var i1=-1
-                    for(i in 0..(list.length()-1)){
-                        nocheck=list.getJSONObject(i)
-                        if(general.getString(nocheck,"checkresult")==""){
+                    var nocheck = JSONObject()
+                    var i1 = -1
+                    for (i in 0..(list.length() - 1)) {
+                        nocheck = list.getJSONObject(i)
+                        if (general.getString(nocheck, "checkresult") == "") {
                             list.remove(i)
-                            i1=i
+                            i1 = i
                             break
                         }
                     }
@@ -189,31 +196,68 @@ class ProductCheckViewModel(val vw: ProductCheckActivity, val ctx: Context) {
                     var _list = list
                     list = JSONArray()
 
-                    if(i1==-1) {
+                    if (i1 == -1) {
                         list.put(_list.getJSONObject(0))
                         _list.remove(0)
-                    }else{
+                    } else {
                         list.put(nocheck)
                     }
 
                     list.put(json)
-                    if(_list.length()>0) {
+                    if (_list.length() > 0) {
                         for (index in 0..(_list.length() - 1)) {
                             list.put(_list.getJSONObject(index))
                         }
                     }
                 }
-
-
                 vw.listAdapter.linear = null
                 vw.position = -1
                 vw.ifchange = true
                 vw.listAdapter.rebuild()
                 vw.refreshLayout.isRefreshing = false
 
-
             }
         }
+    }
+
+    //质量排查结果提交
+    fun checks(ifcheck:Int){
+        if(ifcheck==1){
+
+            try {
+                val json = list.getJSONObject(vw.position)
+                val id=json.getInt("id")
+                vw.apiService().inspectrecheck(
+                    id
+                )
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe { vw.showloading() }
+                    .doAfterTerminate { vw.dismissloading()}//请求完成，设置加载为false
+                    .subscribe(
+                        { t: JSONObject? ->
+                            //context.toast(t?.toString()!!)
+                            if (t?.getBoolean("success")!!) {
+                                vw.dialog!!.cancel()
+                            } else {
+                                vw.showTextToast(t.getString("msg") ?: "error")
+                            }
+                            change()
+                        }, { t: Throwable? ->
+                            vw.showTextToast(t?.message ?: "error")
+                        }
+                    )
+
+
+            }catch (e:Exception){
+
+            }
+        }else{
+            vw.dialog!!.cancel()
+            change()
+        }
+
+
     }
 
 

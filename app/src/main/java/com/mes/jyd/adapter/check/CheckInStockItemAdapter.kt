@@ -1,18 +1,19 @@
-package com.mes.jyd.adapter.io
+package com.mes.jyd.adapter.check
 
-import android.graphics.Typeface
+import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.LinearLayout
-import com.mes.jyd.util.general
-import com.mes.jyd.viewModel.io.InStockViewModel
+import com.mes.jyd.view.check.CheckInStockItemActivity
+import com.mes.jyd.viewModel.check.CheckInStockItemViewModel
+import com.mes.jyd.viewModel.check.ProductInspectViewModel
 import org.jetbrains.anko.*
 import org.jetbrains.anko.cardview.v7.cardView
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.json.JSONObject
 
-class InStockAdapter(var vm: InStockViewModel): BaseAdapter() {
+class CheckInStockItemAdapter(var vm:CheckInStockItemViewModel): BaseAdapter() {
     //生产计划数据
     var list=vm.list
 
@@ -32,23 +33,14 @@ class InStockAdapter(var vm: InStockViewModel): BaseAdapter() {
 
                     linearLayout {
                         orientation = LinearLayout.VERTICAL
-
+                        //生产工单号
                         textView {
-                            val t = "入库单号:${item.getString("instockno")}"
+                            val t = " ${item.getString("taskid")}(${item.getString("typename")})"
                             text = t
                             textSize = 17f
                         }.lparams {
                             verticalMargin = dip(2)
                         }
-
-                        textView {
-                            val t = "描述:${item.getString("instockdesc")}"
-                            text = t
-                            textSize = 17f
-                        }.lparams {
-                            verticalMargin = dip(2)
-                        }
-
                         //工位信息
                         textView {
                             val t = "工位:${item.getString("positiondesc")}"
@@ -58,53 +50,55 @@ class InStockAdapter(var vm: InStockViewModel): BaseAdapter() {
                             verticalMargin = dip(2)
                         }
 
-                        relativeLayout {
-                            linearLayout {
-                                orientation = LinearLayout.VERTICAL
-                                relativeLayout {
-                                    //订单数量
-                                    textView {
-                                        text = general.getString(item, "tasknum")
-                                        textSize = 15f
-                                        typeface = Typeface.create("Roboto-medium", Typeface.NORMAL)
-                                    }
-                                    //待入库数量
-                                    textView {
-                                        text = general.getString(item, "num")
-                                        textSize = 15f
-                                        typeface = Typeface.create("Roboto-medium", Typeface.NORMAL)
-                                    }.lparams {
-                                        alignParentRight()
-                                    }
-                                }
+                        //工序信息
+                        textView {
+                            val t = "工序:${item.getString("procname")}"
+                            text = t
+                            textSize = 17f
+                        }.lparams {
+                            verticalMargin = dip(2)
+                        }
 
-                                relativeLayout {
-                                    //数量
-                                    textView {
-                                        text = "订单数量"
-                                        textSize = 13f
-                                        typeface = Typeface.create("Roboto-medium", Typeface.NORMAL)
-                                    }
-                                    //已完成数
-                                    textView {
-                                        text = "待入库数量"
-                                        textSize = 13f
-                                    }.lparams {
-                                        alignParentRight()
-                                    }
-                                }
-                            }
+
+
+                        textView {
+                            val t = "产品编码: ${item.getString("mapno")}"
+                            text = t
+                            textSize = 17f
+                            textColor = Color.argb(85, 0, 0, 0)
+                        }.lparams {
+                            verticalMargin = dip(8)
+                        }
+                        //物料名称
+                        textView {
+                            val t = "产品名称: ${item.getString("memo")}"
+                            text = t
+                            textSize = 17f
 
                         }.lparams {
-                            bottomMargin = dip(16)
+                            verticalMargin = dip(2)
+                        }
+
+                        textView {
+                            val t = "产品标识码:${item.getString("cardno")}"
+                            text = t
+                            textSize = 17f
+                        }.lparams {
+                            verticalMargin = dip(2)
                         }
                         //点击按钮检验
                         button {
-                            text="入库"
+                            text="检验"
 
                             onClick {
-                                //跳转
-                                vm.intentto(item.getInt("id"))
+                                //判断是否绑定了批次号或序列号 若未绑定则弹出绑定框
+                                if(item.getString("cardno")==""){
+                                    vm.vw.chooseid=item.getInt("checkmainid")
+                                    vm.vw.dialog(0)
+                                }else {
+                                    //跳转
+                                    vm.intentto(item.getInt("checkmainid"))
+                                }
                             }
                         }.lparams {
                             minimumWidth=dip(100)

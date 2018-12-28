@@ -22,8 +22,6 @@ import android.widget.Toast
 import com.mes.jyd.R
 import com.mes.jyd.adapter.DashboardCardItemAdapter
 import com.mes.jyd.base.BaseActivity
-import com.mes.jyd.base.BaseScanActivity
-import com.mes.jyd.base.scanActivity
 import com.mes.jyd.delegate.AndroidUtil
 import com.mes.jyd.delegate.ParaSave
 import com.mes.jyd.service.DownloadService
@@ -127,7 +125,8 @@ class NavigationActivity : BaseActivity() {
                 }
                 //下拉刷新事件
                 setOnRefreshListener {
-                    vm.getPermission()
+                   // vm.getPermission()
+                    refreshLayout.isRefreshing = false
                 }
             }.lparams(width = matchParent, height = matchParent) {
                 topMargin = dip(56)
