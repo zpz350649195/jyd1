@@ -194,7 +194,6 @@ class ProductCheckActivity:BaseActivity(){
                                             HideKeyboard(vw)
                                     }
                                 }
-                                visibility = View.GONE
                             }.lparams(width = matchParent) {
                                 height = dip(50)
                             }
